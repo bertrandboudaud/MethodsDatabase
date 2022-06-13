@@ -11,6 +11,8 @@
                 <th>ID</th>
                 <th>name</th>
                 <th>technique</th>
+                <th>comment</th>
+                <th>analysis_method</th>
                 <th>&nbsp;</th>
               </tr>
             </thead>
@@ -19,6 +21,8 @@
                 <td>{{ method.id }}</td>
                 <td>{{ method.name }}</td>
                 <td>{{ method.technique }}</td>
+                <td>{{ method.comment }}</td>
+                <td>{{ method.analysis_method }}</td>
                 <td class="text-right">
                   <a href="#" @click.prevent="populateMethodToEdit(method)">Edit</a>
                   -
@@ -43,6 +47,18 @@
                   type="text"
                 ></b-form-input>
               </b-form-group>
+              <b-form-group label="comment">
+                <b-form-input
+                  v-model="model.comment"
+                  type="text"
+                ></b-form-input>
+              </b-form-group>
+              <b-form-group label="analysis_method">
+                <b-form-input
+                  v-model="model.analysis_method"
+                  type="text"
+                ></b-form-input>
+              </b-form-group>
               <div>
                 <b-btn type="submit" variant="success">Save Method</b-btn>
               </div>
@@ -64,7 +80,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Method } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '', technique: '' }
+const NO_INSTRUMENT = { id: '', name: '', technique: '', comment: '', analysis_method: '' }
 
 @Component
 export default class Home extends Vue {

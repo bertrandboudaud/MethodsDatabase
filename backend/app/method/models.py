@@ -8,8 +8,10 @@ class Method(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     technique = db.Column(db.String(80), unique=True, nullable=False)
+    comment = db.Column(db.String(80), unique=True, nullable=False)
+    analysis_method = db.Column(db.String(80), unique=True, nullable=False)
 
-    def __init__(self, id=None, name=None, technique=None):
+    def __init__(self, id=None, name=None, technique=None, comment=None, analysis_method=None):
         if not id:
             id = uuid4()
         self.id = id
@@ -17,6 +19,8 @@ class Method(db.Model):
         self.last_modified_at = self.created_at
         self.name = name
         self.technique = technique
+        self.comment = comment
+        self.analysis_method = analysis_method
 
     def __repr__(self):
         return "<Method %r>" % self.name

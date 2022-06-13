@@ -33,6 +33,8 @@ class MethodSchema(WrapDataSchema):
     id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
     technique = fields.Str(required=True)
+    comment = fields.Str(required=True)
+    analysis_method = fields.Str(required=True)
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:

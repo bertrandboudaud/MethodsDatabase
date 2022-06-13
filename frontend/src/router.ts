@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Users from './views/Users.vue'
 import Instruments from './views/Instruments.vue'
+import Compounds from './views/Compounds.vue'
 
 Vue.use(Router)
 
@@ -24,6 +25,11 @@ export default new Router({
       path: '/instruments',
       name: 'instruments',
       component: Instruments,
+    },
+    {
+      path: '/compounds',
+      name: 'compounds',
+      component: Compounds,
     },
     {
       path: '/about',

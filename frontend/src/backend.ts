@@ -40,6 +40,12 @@ export interface Instrument {
   model: String
 }
 
+export interface Compound {
+  id: String
+  name: String
+  iupac: String
+}
+
 export let backend = {
 
   // ---------------------
@@ -104,5 +110,37 @@ export let backend = {
 
   deleteInstrument(id) {
     return $axios.delete(`instruments/${id}`).then((response) => response.data)
+  },
+
+  // ---------------------
+  // Compounds
+  // ---------------------
+
+  getCompounds() {
+    return $axios.get(`compounds/`).then((response) => response.data)
+  },
+
+  getCompound(id) {
+    return $axios.get(`compounds/${id}`).then((response) => response.data)
+  },
+
+  createCompound(data) {
+    let instrument = {
+      name: data.name,
+      iupac: data.iupac,
+    }
+    return $axios.post(`compounds/`, instrument).then((response) => response.data)
+  },
+
+  updateCompound(id, data) {
+    let instrument = {
+      name: data.name,
+      iupac: data.iupac,
+    }
+    return $axios.post(`compounds/${id}`, instrument).then((response) => response.data)
+  },
+
+  deleteCompound(id) {
+    return $axios.delete(`compounds/${id}`).then((response) => response.data)
   },
 }

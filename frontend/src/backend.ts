@@ -46,6 +46,11 @@ export interface Compound {
   iupac: String
 }
 
+export interface Eluent {
+  id: String
+  name: String
+}
+
 export let backend = {
 
   // ---------------------
@@ -125,22 +130,52 @@ export let backend = {
   },
 
   createCompound(data) {
-    let instrument = {
+    let compound = {
       name: data.name,
       iupac: data.iupac,
     }
-    return $axios.post(`compounds/`, instrument).then((response) => response.data)
+    return $axios.post(`compounds/`, compound).then((response) => response.data)
   },
 
   updateCompound(id, data) {
-    let instrument = {
+    let compound = {
       name: data.name,
       iupac: data.iupac,
     }
-    return $axios.post(`compounds/${id}`, instrument).then((response) => response.data)
+    return $axios.post(`compounds/${id}`, compound).then((response) => response.data)
   },
 
   deleteCompound(id) {
     return $axios.delete(`compounds/${id}`).then((response) => response.data)
+  },
+
+  // ---------------------
+  // Eluents
+  // ---------------------
+
+  getEluents() {
+    return $axios.get(`eluents/`).then((response) => response.data)
+  },
+
+  getEluent(id) {
+    return $axios.get(`eluents/${id}`).then((response) => response.data)
+  },
+
+  createEluent(data) {
+    let eluent = {
+      name: data.name,
+    }
+    return $axios.post(`eluents/`, eluent).then((response) => response.data)
+  },
+
+  updateEluent(id, data) {
+    let eluent = {
+      name: data.name,
+    }
+    return $axios.post(`eluents/${id}`, eluent).then((response) => response.data)
+  },
+
+  deleteEluent(id) {
+    return $axios.delete(`eluents/${id}`).then((response) => response.data)
   },
 }

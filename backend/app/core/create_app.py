@@ -16,10 +16,12 @@ def register_api(app: Flask) -> None:
     from app.user.api import blueprint as user_blueprint
     from app.instrument.api import blueprint as instrument_blueprint
     from app.compound.api import blueprint as compound_blueprint
+    from app.eluent.api import blueprint as eluent_blueprint
 
     api.register_blueprint(user_blueprint)
     api.register_blueprint(instrument_blueprint)
     api.register_blueprint(compound_blueprint)
+    api.register_blueprint(eluent_blueprint)
     api.register_blueprint(forum_blueprint)
 
     @app.route("/api")

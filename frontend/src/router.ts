@@ -4,6 +4,7 @@ import Home from './views/Home.vue'
 import Users from './views/Users.vue'
 import Instruments from './views/Instruments.vue'
 import Compounds from './views/Compounds.vue'
+import Eluents from './views/Eluents.vue'
 
 Vue.use(Router)
 
@@ -30,6 +31,11 @@ export default new Router({
       path: '/compounds',
       name: 'compounds',
       component: Compounds,
+    },
+    {
+      path: '/eluents',
+      name: 'eluents',
+      component: Eluents,
     },
     {
       path: '/about',

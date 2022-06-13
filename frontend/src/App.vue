@@ -3,9 +3,10 @@
     <b-navbar id="nav">
       <b-navbar-nav>
         <b-nav-item to="/">Home</b-nav-item> |
+        <b-nav-item to="/compounds">Compounds</b-nav-item> |
         <b-nav-item to="/users">Users</b-nav-item> |
         <b-nav-item to="/instruments">Instruments</b-nav-item> |
-        <b-nav-item to="/compounds">Compounds</b-nav-item> |
+        <b-nav-item to="/Eluents">Eluents</b-nav-item> |
         <b-nav-item to="/about">About</b-nav-item>
       </b-navbar-nav>
     </b-navbar>

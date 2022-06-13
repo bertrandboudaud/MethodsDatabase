@@ -62,6 +62,12 @@ def upgrade():
     sa.UniqueConstraint('name'),
     sa.UniqueConstraint('iupac')
     )
+    op.create_table('eluent',
+    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('name', sa.String(length=80), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name'),
+    )
     # ### end Alembic commands ###
 
 

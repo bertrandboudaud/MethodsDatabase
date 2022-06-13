@@ -2,8 +2,8 @@
   <div>
     <div class="hero">
       <div>
-        <h1 class="display-3">Hello World!</h1>
-        <p class="lead">The home</p>
+        <h1 class="display-3">The DTU Methods Database</h1>
+        <p class="lead">The DTU Methods Database</p>
       </div>
     </div>
 

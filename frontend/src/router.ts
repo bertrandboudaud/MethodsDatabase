@@ -15,11 +15,6 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/vue-cli',
-      name: 'vue-cli',
-      component: VueCli,
-    },
-    {
       path: '/about',
       name: 'about',
       // route level code-splitting

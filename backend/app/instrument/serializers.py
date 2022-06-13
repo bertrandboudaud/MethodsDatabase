@@ -5,7 +5,7 @@ from marshmallow import fields, validates_schema, ValidationError
 
 from app.utils.serializers import WrapDataSchema
 from app.utils.types import JSON
-from .models import User
+from .models import Instrument
 
 
 def validate_unique_field(
@@ -21,29 +21,24 @@ def validate_unique_field(
     Returns:
         Nothing, raises ValidationError if validation failed.
     """
-    query = User.query.filter(getattr(User, name) == value)
+    query = Instrument.query.filter(getattr(Instrument, name) == value)
     if id is not None:
         # Allow updating username or email for the user to the
         # same value.
-        query = query.filter(User.id != id)
+        query = query.filter(Instrument.id != id)
     if query.first():
         raise ValidationError("{} should be unique: {}".format(name, value), name)
 
-
-class UserSchema(WrapDataSchema):
+class InstrumentSchema(WrapDataSchema):
     id = fields.Str(dump_only=True)
-    username = fields.Str(required=True)
-    email = fields.Email(required=True)
+    name = fields.Str(required=True)
+    model = fields.Str(required=True)
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:
-        """Valdiate username and email to make sure they are unique."""
         id = None
-        if "user" in self.context:
-            id = self.context["user"].id
+        if "instrument" in self.context:
+            id = self.context["instrument"].id
 
-        username = data.get("username")
-        validate_unique_field("username", username, id)
-        email = data.get("email")
-        validate_unique_field("email", email, id)
-
+        name = data.get("name")
+        validate_unique_field("name", name, id)

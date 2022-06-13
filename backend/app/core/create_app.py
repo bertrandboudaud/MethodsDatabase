@@ -14,8 +14,10 @@ def register_api(app: Flask) -> None:
     """Register blueprints and routes."""
     from app.forum.api import blueprint as forum_blueprint
     from app.user.api import blueprint as user_blueprint
+    from app.instrument.api import blueprint as instrument_blueprint
 
     api.register_blueprint(user_blueprint)
+    api.register_blueprint(instrument_blueprint)
     api.register_blueprint(forum_blueprint)
 
     @app.route("/api")

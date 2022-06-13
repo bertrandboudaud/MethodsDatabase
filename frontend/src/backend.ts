@@ -34,7 +34,18 @@ export interface User {
   email: String
 }
 
+export interface Instrument {
+  id: String
+  name: String
+  model: String
+}
+
 export let backend = {
+
+  // ---------------------
+  // Users
+  // ---------------------
+
   getUsers() {
     return $axios.get(`users/`).then((response) => response.data)
   },
@@ -61,5 +72,37 @@ export let backend = {
 
   deleteUser(id) {
     return $axios.delete(`users/${id}`).then((response) => response.data)
+  },
+
+  // ---------------------
+  // Instruments
+  // ---------------------
+
+  getInstruments() {
+    return $axios.get(`instruments/`).then((response) => response.data)
+  },
+
+  getInstrument(id) {
+    return $axios.get(`instruments/${id}`).then((response) => response.data)
+  },
+
+  createInstrument(data) {
+    let instrument = {
+      name: data.name,
+      model: data.model,
+    }
+    return $axios.post(`instruments/`, instrument).then((response) => response.data)
+  },
+
+  updateInstrument(id, data) {
+    let instrument = {
+      name: data.name,
+      model: data.model,
+    }
+    return $axios.post(`instruments/${id}`, instrument).then((response) => response.data)
+  },
+
+  deleteInstrument(id) {
+    return $axios.delete(`instruments/${id}`).then((response) => response.data)
   },
 }

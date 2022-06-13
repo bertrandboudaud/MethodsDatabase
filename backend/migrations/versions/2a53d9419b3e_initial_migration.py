@@ -47,6 +47,13 @@ def upgrade():
     sa.ForeignKeyConstraint(['post_id'], ['post.id'], ),
     sa.PrimaryKeyConstraint('id', 'post_id')
     )
+    op.create_table('instrument',
+    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('name', sa.String(length=80), nullable=False),
+    sa.Column('model', sa.String(length=120), nullable=False),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name')
+    )
     # ### end Alembic commands ###
 
 
@@ -55,4 +62,5 @@ def downgrade():
     op.drop_table('comment')
     op.drop_table('post')
     op.drop_table('user')
+    op.drop_table('instrument')
     # ### end Alembic commands ###

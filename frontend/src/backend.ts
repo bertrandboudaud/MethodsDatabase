@@ -56,6 +56,12 @@ export interface Column {
   name: String
 }
 
+export interface Method {
+  id: String
+  name: String
+  iupac: String
+}
+
 export let backend = {
 
   // ---------------------
@@ -212,5 +218,37 @@ export let backend = {
 
   deleteColumn(id) {
     return $axios.delete(`columns/${id}`).then((response) => response.data)
+  },
+
+  // ---------------------
+  // Methods
+  // ---------------------
+
+  getMethods() {
+    return $axios.get(`methods/`).then((response) => response.data)
+  },
+
+  getMethod(id) {
+    return $axios.get(`methods/${id}`).then((response) => response.data)
+  },
+
+  createMethod(data) {
+    let method = {
+      name: data.name,
+      iupac: data.iupac,
+    }
+    return $axios.post(`methods/`, method).then((response) => response.data)
+  },
+
+  updateMethod(id, data) {
+    let method = {
+      name: data.name,
+      iupac: data.iupac,
+    }
+    return $axios.post(`methods/${id}`, method).then((response) => response.data)
+  },
+
+  deleteMethod(id) {
+    return $axios.delete(`methods/${id}`).then((response) => response.data)
   },
 }

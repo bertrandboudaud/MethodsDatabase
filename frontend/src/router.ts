@@ -6,6 +6,7 @@ import Instruments from './views/Instruments.vue'
 import Compounds from './views/Compounds.vue'
 import Eluents from './views/Eluents.vue'
 import Columns from './views/Columns.vue'
+import Methods from './views/Methods.vue'
 
 Vue.use(Router)
 
@@ -32,6 +33,11 @@ export default new Router({
       path: '/compounds',
       name: 'compounds',
       component: Compounds,
+    },
+    {
+      path: '/methods',
+      name: 'methods',
+      component: Methods,
     },
     {
       path: '/eluents',

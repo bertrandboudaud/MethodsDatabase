@@ -51,6 +51,11 @@ export interface Eluent {
   name: String
 }
 
+export interface Column {
+  id: String
+  name: String
+}
+
 export let backend = {
 
   // ---------------------
@@ -177,5 +182,35 @@ export let backend = {
 
   deleteEluent(id) {
     return $axios.delete(`eluents/${id}`).then((response) => response.data)
+  },
+
+  // ---------------------
+  // Columns
+  // ---------------------
+
+  getColumns() {
+    return $axios.get(`columns/`).then((response) => response.data)
+  },
+
+  getColumn(id) {
+    return $axios.get(`columns/${id}`).then((response) => response.data)
+  },
+
+  createColumn(data) {
+    let column = {
+      name: data.name,
+    }
+    return $axios.post(`columns/`, column).then((response) => response.data)
+  },
+
+  updateColumn(id, data) {
+    let column = {
+      name: data.name,
+    }
+    return $axios.post(`columns/${id}`, column).then((response) => response.data)
+  },
+
+  deleteColumn(id) {
+    return $axios.delete(`columns/${id}`).then((response) => response.data)
   },
 }

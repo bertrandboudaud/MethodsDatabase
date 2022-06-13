@@ -5,6 +5,7 @@ import Users from './views/Users.vue'
 import Instruments from './views/Instruments.vue'
 import Compounds from './views/Compounds.vue'
 import Eluents from './views/Eluents.vue'
+import Columns from './views/Columns.vue'
 
 Vue.use(Router)
 
@@ -36,6 +37,11 @@ export default new Router({
       path: '/eluents',
       name: 'eluents',
       component: Eluents,
+    },
+    {
+      path: '/columns',
+      name: 'columns',
+      component: Columns,
     },
     {
       path: '/about',

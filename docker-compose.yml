@@ -1,0 +1,61 @@
+services:
+  backend:
+    restart: always
+    build:
+      context: backend
+      dockerfile: Dockerfile
+      args:
+        # Services that use host files need to run with the same UID/GID as the host
+        # user for these files to be accessible in both host and docker.
+        # Here, `UID` and `GID` are forwarded as build args to create the user.
+        # Requires `export UID=$UID` and `export GID=$GID` somewhere (~/.bashrc or ~/.zshrc).
+        # See also: https://github.com/docker/compose/issues/2380
+        UID: 1000
+        GID: 1000
+
+    entrypoint: ./docker-entrypoint.sh
+    command: flask run
+    depends_on:
+      - postgresql
+    volumes:
+      - ./backend:/backend
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: /backend/app/app.py
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_CONFIG: local
+      SQLALCHEMY_DATABASE_URI: 'postgresql://testuser:testpw@postgresql:5432/forum'
+      SQLALCHEMY_TEST_DATABASE_URI: 'postgresql://testuser:testpw@postgresql:5432/forumtest'
+
+  frontend:
+    restart: always
+    build:
+      context: frontend
+      dockerfile: Dockerfile
+      args:
+        - UID=1000
+        - GID=1000
+    user: "node"
+    command: /bin/bash -c "yarn install && yarn serve"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/frontend
+    ports:
+      - "8080:8080"
+
+  postgresql:
+    image: postgres:13
+    user: "1000:1000"
+    environment:
+      POSTGRES_USER: testuser
+      POSTGRES_PASSWORD: testpw
+      PGDATA: /var/lib/postgresql/data/pgdata2
+    ports:
+      - "5432:5432"
+    volumes: 
+      - "postgres-vol:/var/lib/postgresql/data"
+
+volumes:
+  postgres-vol:

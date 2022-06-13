@@ -59,7 +59,7 @@ export interface Column {
 export interface Method {
   id: String
   name: String
-  iupac: String
+  technique: String
 }
 
 export let backend = {
@@ -235,7 +235,7 @@ export let backend = {
   createMethod(data) {
     let method = {
       name: data.name,
-      iupac: data.iupac,
+      technique: data.technique,
     }
     return $axios.post(`methods/`, method).then((response) => response.data)
   },
@@ -243,7 +243,7 @@ export let backend = {
   updateMethod(id, data) {
     let method = {
       name: data.name,
-      iupac: data.iupac,
+      technique: data.technique,
     }
     return $axios.post(`methods/${id}`, method).then((response) => response.data)
   },

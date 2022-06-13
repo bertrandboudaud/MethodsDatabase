@@ -32,7 +32,7 @@ def validate_unique_field(
 class MethodSchema(WrapDataSchema):
     id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
-    iupac = fields.Str(required=True)
+    technique = fields.Str(required=True)
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:
@@ -42,5 +42,3 @@ class MethodSchema(WrapDataSchema):
 
         name = data.get("name")
         validate_unique_field("name", name, id)
-        iupac = data.get("iupac")
-        validate_unique_field("iupac", iupac, id)

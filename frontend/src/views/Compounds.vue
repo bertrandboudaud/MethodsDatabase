@@ -5,17 +5,20 @@
       <b-alert :show="isLoading" variant="info">Loading...</b-alert>
       <b-row>
         <b-col>
-          <form @submit.prevent="filterCompound">
-            <b-form-group label="search name">
-              <b-form-input
-                v-model="filter.name"
-                type="text"
-              ></b-form-input>
-              <div>
-                <b-btn type="submit" variant="success">Filter</b-btn>
-              </div>
-            </b-form-group>
-          </form>
+          <b-container fluid>
+            <b-row>
+              <b-col sm="3">
+                <label>name</label>
+              </b-col>
+              <b-col sm="9">
+                <b-form-input
+                  v-model="filter.name"
+                  type="text"
+                ></b-form-input>
+              </b-col>
+            </b-row>
+            <b-button @click="filterCompound()" variant="success">Filter</b-button>
+          </b-container>
           <table class="table table-striped">
             <thead>
               <tr>

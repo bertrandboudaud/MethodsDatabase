@@ -134,8 +134,8 @@ export let backend = {
   // Compounds
   // ---------------------
 
-  getCompounds() {
-    return $axios.get(`compounds/`).then((response) => response.data)
+  getCompounds(filter = null) {
+    return $axios.get(`compounds/`, {params: filter}).then((response) => response.data)
   },
 
   getCompound(id) {

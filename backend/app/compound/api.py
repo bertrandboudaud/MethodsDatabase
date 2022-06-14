@@ -5,6 +5,7 @@ from flask_smorest import Blueprint, abort
 
 from .models import Compound
 from .serializers import CompoundSchema
+from .serializers import CompoundFilterSchema
 
 blueprint = Blueprint(
     "compounds", "compounds", url_prefix="/api/compounds", description="Operations on compounds"
@@ -12,9 +13,14 @@ blueprint = Blueprint(
 
 
 @blueprint.route("/", methods=["GET"])
+@blueprint.arguments(CompoundFilterSchema, location="query")
 @blueprint.response(200, CompoundSchema(many=True))
-def compounds_get():
-    return Compound.query.all()
+def compounds_get(args):
+    name = args.get("name", "")
+    if (name != ""):
+        return Compound.query.filter(Compound.name.contains(name)).all()
+    else:
+        return Compound.query.all()
 
 
 @blueprint.route("/<string:id>", methods=["GET"])

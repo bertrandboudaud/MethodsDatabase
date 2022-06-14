@@ -5,6 +5,17 @@
       <b-alert :show="isLoading" variant="info">Loading...</b-alert>
       <b-row>
         <b-col>
+          <form @submit.prevent="filterCompound">
+            <b-form-group label="search name">
+              <b-form-input
+                v-model="filter.name"
+                type="text"
+              ></b-form-input>
+              <div>
+                <b-btn type="submit" variant="success">Filter</b-btn>
+              </div>
+            </b-form-group>
+          </form>
           <table class="table table-striped">
             <thead>
               <tr>
@@ -73,8 +84,10 @@ export default class Home extends Vue {
   model: Compound = NO_INSTRUMENT
   error: Object = null
   errors: Array<String> = []
+  filter: Object = { name: '' }
 
   async beforeMount() {
+    this.filter = { name: '' };
     this.refreshCompounds()
   }
 
@@ -105,6 +118,17 @@ export default class Home extends Vue {
     } catch (err) {
       this.parseError(err)
     }
+  }
+
+  async filterCompound() {
+    this.isLoading = true
+    try {
+      let response = await backend.getCompounds(this.filter)
+      this.compounds = response.data
+    } catch (err) {
+      this.parseError(err)
+    }
+    this.isLoading = false
   }
 
   async deleteCompound(id) {

@@ -33,6 +33,7 @@ class CompoundSchema(WrapDataSchema):
     id = fields.Str(dump_only=True)
     name = fields.Str(required=True)
     iupac = fields.Str(required=True)
+    comment = fields.Str(required=True)
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:
@@ -44,3 +45,6 @@ class CompoundSchema(WrapDataSchema):
         validate_unique_field("name", name, id)
         iupac = data.get("iupac")
         validate_unique_field("iupac", iupac, id)
+
+class CompoundFilterSchema(WrapDataSchema):
+    name = fields.Str()

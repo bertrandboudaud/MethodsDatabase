@@ -19,6 +19,7 @@
             </b-row>
             <b-button @click="filterCompound()" variant="success">Filter</b-button>
           </b-container>
+          <b-button @click="newCoumpound()">New Compound</b-button>
           <table class="table table-striped">
             <thead>
               <tr>
@@ -34,7 +35,7 @@
                 <td>{{ compound.name }}</td>
                 <td>{{ compound.iupac }}</td>
                 <td class="text-right">
-                  <a href="#" @click.prevent="populateCompoundToEdit(compound)">Edit</a>
+                  <a href="#" @click="modalShow = !modalShow" @click.prevent="populateCompoundToEdit(compound)">Edit</a>
                   -
                   <a href="#" @click.prevent="deleteCompound(compound.id)">Delete</a>
                 </td>
@@ -42,32 +43,33 @@
             </tbody>
           </table>
         </b-col>
-        <b-col lg="3">
-          <b-card :title="model.id ? 'Edit Compound ID#' + model.id : 'New Compound'">
-            <form @submit.prevent="saveCompound">
-              <b-form-group label="name">
-                <b-form-input
-                  v-model="model.name"
-                  type="text"
-                ></b-form-input>
-              </b-form-group>
-              <b-form-group label="iupac">
-                <b-form-input
-                  v-model="model.iupac"
-                  type="text"
-                ></b-form-input>
-              </b-form-group>
-              <div>
-                <b-btn type="submit" variant="success">Save Compound</b-btn>
-              </div>
-            </form>
-          </b-card>
-          <div v-if="errors">
-            <span v-for="error in errors" :key="error">
-              {{ error }}
-            </span>
-          </div>
-        </b-col>
+        <b-modal
+          id="modal-edit"
+          ref="modal"
+          v-model="modalShow"
+          :title="model.id ? 'Edit Compound ID#' + model.id : 'New Compound'"
+          @ok="saveCompound"
+        >
+          <form @submit.prevent="saveCompound">
+            <b-form-group label="name">
+              <b-form-input
+                v-model="model.name"
+                type="text"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group label="iupac">
+              <b-form-input
+                v-model="model.iupac"
+                type="text"
+              ></b-form-input>
+            </b-form-group>
+          </form>
+        </b-modal>
+        <div v-if="errors">
+          <span v-for="error in errors" :key="error">
+            {{ error }}
+          </span>
+        </div>
       </b-row>
     </div>
   </div>
@@ -89,7 +91,13 @@ export default class Home extends Vue {
   errors: Array<String> = []
   filter: Object = { name: '' }
 
-  async beforeMount() {
+  data() {
+    return {
+      modalShow : false
+    }
+  }
+
+async beforeMount() {
     this.filter = { name: '' };
     this.refreshCompounds()
   }
@@ -103,6 +111,11 @@ export default class Home extends Vue {
       this.parseError(err)
     }
     this.isLoading = false
+  }
+
+  async newCoumpound() {
+     this.model = NO_INSTRUMENT // reset form
+     this.modalShow = true;
   }
 
   async populateCompoundToEdit(compound) {

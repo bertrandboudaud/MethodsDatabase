@@ -27,19 +27,20 @@ def validate_unique_field(
         # same value.
         query = query.filter(Compound.id != id)
     if query.first():
-        raise ValidationError("{} should be unique: {}".format(name, value), name)
+        raise ValidationError("{} should be unique: {} id:{}".format(name, value, id), name, id)
 
 class CompoundSchema(WrapDataSchema):
-    id = fields.Str(dump_only=True)
+    id = fields.Str()
     name = fields.Str(required=True)
     iupac = fields.Str(required=True)
     comment = fields.Str()
+    methdod_id = fields.Str()
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:
         id = None
-        if "compound" in self.context:
-            id = self.context["compound"].id
+        if "id" in data:
+            id = data["id"]
 
         name = data.get("name")
         validate_unique_field("name", name, id)

@@ -3,74 +3,80 @@
     <div class="container-fluid mt-4">
       <h1 class="h1">Compounds</h1>
       <b-alert :show="isLoading" variant="info">Loading...</b-alert>
-      <b-row>
-        <b-col>
-          <b-container fluid>
-            <b-row>
-              <b-col sm="3">
-                <label>name</label>
-              </b-col>
-              <b-col sm="9">
-                <b-form-input
-                  v-model="filter.name"
-                  type="text"
-                ></b-form-input>
-              </b-col>
-            </b-row>
-            <b-button @click="filterCompound()" variant="success">Filter</b-button>
-          </b-container>
-          <b-button @click="newCoumpound()">New Compound</b-button>
-          <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>ID</th>
-                <th>name</th>
-                <th>iupac</th>
-                <th>&nbsp;</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="compound in compounds" :key="compound.id">
-                <td>{{ compound.id }}</td>
-                <td>{{ compound.name }}</td>
-                <td>{{ compound.iupac }}</td>
-                <td class="text-right">
-                  <a href="#" @click="modalShow = !modalShow" @click.prevent="populateCompoundToEdit(compound)">Edit</a>
-                  -
-                  <a href="#" @click.prevent="deleteCompound(compound.id)">Delete</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </b-col>
-        <b-modal
-          id="modal-edit"
-          ref="modal"
-          v-model="modalShow"
-          :title="model.id ? 'Edit Compound ID#' + model.id : 'New Compound'"
-          @ok="saveCompound"
-        >
-          <form @submit.prevent="saveCompound">
-            <b-form-group label="name">
-              <b-form-input
-                v-model="model.name"
-                type="text"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group label="iupac">
-              <b-form-input
-                v-model="model.iupac"
-                type="text"
-              ></b-form-input>
-            </b-form-group>
-          </form>
-        </b-modal>
-        <div v-if="errors">
+        
+      <b-container fluid>
+        <b-row>
+          <b-col sm="3">
+            <label>name</label>
+          </b-col>
+          <b-col sm="9">
+            <b-form-input
+              v-model="filter.name"
+              type="text"
+            ></b-form-input>
+          </b-col>
+        </b-row>
+        <b-button @click="filterCompound()" variant="success">Filter</b-button>
+      </b-container>
+
+      <b-button @click="newCoumpound()">New Compound</b-button>
+      
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>name</th>
+            <th>iupac</th>
+            <th>method_id</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="compound in compounds" :key="compound.id">
+            <td>{{ compound.id }}</td>
+            <td>{{ compound.name }}</td>
+            <td>{{ compound.iupac }}</td>
+            <td>{{ compound.method_id }}</td>
+            <td class="text-right">
+              <a href="#" @click="modalShow = !modalShow" @click.prevent="populateCompoundToEdit(compound)">Edit</a>
+              -
+              <a href="#" @click.prevent="deleteCompound(compound.id)">Delete</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <b-modal
+        id="modal-edit"
+        ref="modal"
+        v-model="modalShow"
+        :title="model.id ? 'Edit Compound ID#' + model.id : 'New Compound'"
+        @ok="saveCompound"
+      >
+        <form @submit.prevent="saveCompound">
+          <b-form-group label="name">
+            <b-form-input
+              v-model="model.name"
+              type="text"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="iupac">
+            <b-form-input
+              v-model="model.iupac"
+              type="text"
+            ></b-form-input>
+          </b-form-group>
+        </form>
+      </b-modal>
+
+      <div v-if="errors">
+        <b-alert variant="danger" v-model="showError" dismissible>
           <span v-for="error in errors" :key="error">
-            {{ error }}
+              {{ error }}
           </span>
-        </div>
-      </b-row>
+        </b-alert>
+      </div>
+
     </div>
   </div>
 </template>
@@ -80,7 +86,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Compound } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '', iupac: '' }
+const NO_INSTRUMENT = { id: '', name: '', iupac: '', method_id: '' }
 
 @Component
 export default class Home extends Vue {
@@ -90,10 +96,12 @@ export default class Home extends Vue {
   error: Object = null
   errors: Array<String> = []
   filter: Object = { name: '' }
+  showError : Boolean = false
 
   data() {
     return {
-      modalShow : false
+      modalShow : false,
+      showError : false
     }
   }
 
@@ -161,10 +169,12 @@ async beforeMount() {
   parseError(error) {
     this.error = error
     this.errors = []
+    this.showError = false
     if (error) {
       for (let idx in error.response.data.errors) {
         this.errors.push(idx + ': ' + error.response.data.errors[idx])
       }
+      this.showError = true
     }
   }
 }

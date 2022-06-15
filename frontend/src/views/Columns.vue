@@ -56,7 +56,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Column } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '', iupac: '' }
+const NO_INSTRUMENT = { id: '', name: '' }
 
 @Component
 export default class Home extends Vue {

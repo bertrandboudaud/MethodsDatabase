@@ -54,14 +54,6 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name')
     )
-    op.create_table('compound',
-    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
-    sa.Column('name', sa.String(length=80), nullable=False),
-    sa.Column('iupac', sa.String(length=80), nullable=False),
-    sa.PrimaryKeyConstraint('id'),
-    sa.UniqueConstraint('name'),
-    sa.UniqueConstraint('iupac')
-    )
     op.create_table('eluent',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
@@ -83,6 +75,15 @@ def upgrade():
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name'),
     )
+    op.create_table('compound',
+    sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
+    sa.Column('name', sa.String(length=80), nullable=False),
+    sa.Column('iupac', sa.String(length=80), nullable=False),
+    sa.Column('method_id', postgresql.UUID, sa.ForeignKey("method.id")),
+    sa.PrimaryKeyConstraint('id'),
+    sa.UniqueConstraint('name'),
+    sa.UniqueConstraint('iupac')
+    )
     # ### end Alembic commands ###
 
 
@@ -92,4 +93,8 @@ def downgrade():
     op.drop_table('post')
     op.drop_table('user')
     op.drop_table('instrument')
+    op.drop_table('eluent')
+    op.drop_table('column')
+    op.drop_table('method')
+    op.drop_table('compound')
     # ### end Alembic commands ###

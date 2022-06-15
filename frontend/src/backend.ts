@@ -44,6 +44,7 @@ export interface Compound {
   id: String
   name: String
   iupac: String
+  method_id: String
 }
 
 export interface Eluent {
@@ -152,6 +153,7 @@ export let backend = {
 
   updateCompound(id, data) {
     let compound = {
+      id: id,
       name: data.name,
       iupac: data.iupac,
     }

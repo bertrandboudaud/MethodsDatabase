@@ -111,11 +111,10 @@ export default class Home extends Vue {
     return {
       modalShow : false,
       showError : false,
-      selected_method : ''
     }
   }
 
-async beforeMount() {
+  async beforeMount() {
     this.filter = { name: '' };
     this.refreshCompounds()
     this.refreshMethods()

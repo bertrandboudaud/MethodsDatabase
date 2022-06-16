@@ -74,6 +74,8 @@ def upgrade():
     sa.Column('analysis_method', sa.String(length=80), nullable=False),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name'),
+    sa.Column('eluent_a_id', postgresql.UUID, sa.ForeignKey("eluent.id")),
+    sa.Column('eluent_b_id', postgresql.UUID, sa.ForeignKey("eluent.id")),
     )
     op.create_table('compound',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
@@ -82,7 +84,7 @@ def upgrade():
     sa.Column('method_id', postgresql.UUID, sa.ForeignKey("method.id")),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name'),
-    sa.UniqueConstraint('iupac')
+    sa.UniqueConstraint('iupac'),
     )
     # ### end Alembic commands ###
 

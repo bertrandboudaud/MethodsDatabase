@@ -63,6 +63,8 @@ export interface Method {
   technique: String
   comment: String
   analysis_method: String
+  eluent_a_id: String
+  eluent_b_id: String
 }
 
 export let backend = {
@@ -244,6 +246,8 @@ export let backend = {
       technique: data.technique,
       comment: data.comment,
       analysis_method: data.analysis_method,
+      eluent_a_id : data.eluent_a_id,
+      eluent_b_id : data.eluent_b_id,
     }
     return $axios.post(`methods/`, method).then((response) => response.data)
   },
@@ -254,6 +258,8 @@ export let backend = {
       technique: data.technique,
       comment: data.comment,
       analysis_method: data.analysis_method,
+      eluent_a_id : data.eluent_a_id,
+      eluent_b_id : data.eluent_b_id,
     }
     return $axios.post(`methods/${id}`, method).then((response) => response.data)
   },

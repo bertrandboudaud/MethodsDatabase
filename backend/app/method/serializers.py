@@ -35,6 +35,8 @@ class MethodSchema(WrapDataSchema):
     technique = fields.Str(required=True)
     comment = fields.Str()
     analysis_method = fields.Str(required=True)
+    eluent_a_id = fields.Str()
+    eluent_b_id = fields.Str()
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:

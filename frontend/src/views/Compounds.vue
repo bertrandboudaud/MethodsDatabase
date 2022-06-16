@@ -27,7 +27,7 @@
             <th>ID</th>
             <th>name</th>
             <th>iupac</th>
-            <th>method_id</th>
+            <th>method</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -36,7 +36,7 @@
             <td>{{ compound.id }}</td>
             <td>{{ compound.name }}</td>
             <td>{{ compound.iupac }}</td>
-            <td>{{ compound.method_id }}</td>
+            <td>{{ getMethodNameFromMethodId(compound.method_id) }}</td>
             <td class="text-right">
               <a href="#" @click="modalShow = !modalShow" @click.prevent="populateCompoundToEdit(compound)">Edit</a>
               -
@@ -197,6 +197,19 @@ async beforeMount() {
         this.errors.push(idx + ': ' + error.response.data.errors[idx])
       }
       this.showError = true
+    }
+  }
+
+  getMethodNameFromMethodId(method_id)
+  {
+    var method =  this.methods.find(method => method.id === method_id)
+    if (typeof method !== 'undefined')
+    {
+      return method.name
+    }
+    else
+    {
+      return ""
     }
   }
 }

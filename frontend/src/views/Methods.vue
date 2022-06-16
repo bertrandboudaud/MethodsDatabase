@@ -32,6 +32,7 @@
             <th>eluent_a</th>
             <th>eluent_b</th>
             <th>instrument</th>
+            <th>column</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -45,6 +46,7 @@
             <td>{{ getEluentNameFromEluentId(method.eluent_a_id) }}</td>
             <td>{{ getEluentNameFromEluentId(method.eluent_b_id) }}</td>
             <td>{{ getInstrumentNameFromInstrumentId(method.instrument_id) }}</td>
+            <td>{{ getColumnNameFromColumnId(method.column_id) }}</td>
             <td class="text-right">
               <a href="#" @click="modalShow = !modalShow" @click.prevent="populateMethodToEdit(method)">Edit</a>
               -
@@ -58,7 +60,7 @@
         id="modal-edit"
         ref="modal"
         v-model="modalShow"
-        :title="model.id ? 'Edit Compound ID#' + model.id : 'New Compound'"
+        :title="model.id ? 'Edit Method ID#' + model.id : 'New Compound'"
         @ok="saveMethod"
       >
         <form @submit.prevent="saveMethod">
@@ -110,6 +112,14 @@
               label="name"
             ></v-select>
           </b-form-group>
+          <b-form-group label="column">
+            <v-select
+              v-model="model.column_id"
+              :options="columns" 
+              :reduce="column => column.id"
+              label="name"
+            ></v-select>
+          </b-form-group>
         </form>
       </b-modal>
 
@@ -147,6 +157,7 @@ export default class Home extends Vue {
   methods: Array<Method> = []
   eluents: Array<Method> = [] // TODO: optimize, we actually only need id and names
   instruments: Array<Method> = [] // TODO: optimize, we actually only need id and names
+  columns: Array<Method> = [] // TODO: optimize, we actually only need id and names
   model: Method = NO_METHOD
   error: Object = null
   errors: Array<String> = []
@@ -165,6 +176,7 @@ export default class Home extends Vue {
     this.refreshMethods()
     this.refreshEluents()
     this.refreshInstruments()
+    this.refreshColumns()
   }
 
   async refreshMethods() {
@@ -194,6 +206,17 @@ export default class Home extends Vue {
     try {
       let response = await backend.getInstruments()
       this.instruments = response.data
+    } catch (err) {
+      this.parseError(err)
+    }
+    this.isLoading = false
+  }
+
+  async refreshColumns() {
+    this.isLoading = true
+    try {
+      let response = await backend.getColumns()
+      this.columns = response.data
     } catch (err) {
       this.parseError(err)
     }
@@ -268,12 +291,25 @@ export default class Home extends Vue {
     }
   }
 
-  getInstrumentNameFromInstrumentId(eluent_id)
+  getInstrumentNameFromInstrumentId(instrument_id)
   {
-    var instrument =  this.instruments.find(instrument => instrument.id === eluent_id)
+    var instrument =  this.instruments.find(instrument => instrument.id === instrument_id)
     if (typeof instrument !== 'undefined')
     {
       return instrument.name
+    }
+    else
+    {
+      return ""
+    }
+  }
+
+  getColumnNameFromColumnId(column_id)
+  {
+    var column =  this.columns.find(column => column.id === column_id)
+    if (typeof column !== 'undefined')
+    {
+      return column.name
     }
     else
     {

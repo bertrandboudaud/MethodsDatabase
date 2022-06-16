@@ -38,6 +38,7 @@ class MethodSchema(WrapDataSchema):
     eluent_a_id = fields.Str()
     eluent_b_id = fields.Str()
     instrument_id = fields.Str()
+    column_id = fields.Str()
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:

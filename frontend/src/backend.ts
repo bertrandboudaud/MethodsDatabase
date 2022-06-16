@@ -147,6 +147,7 @@ export let backend = {
     let compound = {
       name: data.name,
       iupac: data.iupac,
+      method_id : data.method_id,
     }
     return $axios.post(`compounds/`, compound).then((response) => response.data)
   },
@@ -156,6 +157,7 @@ export let backend = {
       id: id,
       name: data.name,
       iupac: data.iupac,
+      method_id : data.method_id,
     }
     return $axios.post(`compounds/${id}`, compound).then((response) => response.data)
   },

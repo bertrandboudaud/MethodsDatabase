@@ -56,13 +56,13 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Eluent } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '' }
+const EMPTY = { id: '', name: '' }
 
 @Component
 export default class Home extends Vue {
   isLoading: Boolean = false
   eluents: Array<Eluent> = []
-  model: Eluent = NO_INSTRUMENT
+  model: Eluent = EMPTY
   error: Object = null
   errors: Array<String> = []
 
@@ -92,7 +92,7 @@ export default class Home extends Vue {
       } else {
         await backend.createEluent(this.model)
       }
-      this.model = NO_INSTRUMENT // reset form
+      this.model = EMPTY // reset form
       await this.refreshEluents()
     } catch (err) {
       this.parseError(err)
@@ -103,7 +103,7 @@ export default class Home extends Vue {
     if (confirm('Are you sure you want to delete this eluent?')) {
       // if we are editing a eluents we deleted, remove it from the form
       if (this.model.id === id) {
-        this.model = NO_INSTRUMENT
+        this.model = EMPTY
       }
       await backend.deleteEluent(id)
       await this.refreshEluents()

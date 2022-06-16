@@ -66,6 +66,14 @@
               type="text"
             ></b-form-input>
           </b-form-group>
+          <b-form-group label="Method">
+            <v-select
+              v-model="model.method_id"
+              :options="methods" 
+              :reduce="method => method.id"
+              label="name"
+            ></v-select>
+          </b-form-group>
         </form>
       </b-modal>
 
@@ -84,15 +92,16 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 
-import { backend, Compound } from '../backend'
+import { backend, Compound, Method } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '', iupac: '', method_id: '' }
+const EMPTY = { id: '', name: '', iupac: '', method_id: '' }
 
 @Component
 export default class Home extends Vue {
   isLoading: Boolean = false
   compounds: Array<Compound> = []
-  model: Compound = NO_INSTRUMENT
+  methods: Array<Method> = [] // TODO: optimize, we actually only need id and names
+  model: Compound = EMPTY
   error: Object = null
   errors: Array<String> = []
   filter: Object = { name: '' }
@@ -101,13 +110,15 @@ export default class Home extends Vue {
   data() {
     return {
       modalShow : false,
-      showError : false
+      showError : false,
+      selected_method : ''
     }
   }
 
 async beforeMount() {
     this.filter = { name: '' };
     this.refreshCompounds()
+    this.refreshMethods()
   }
 
   async refreshCompounds() {
@@ -121,8 +132,19 @@ async beforeMount() {
     this.isLoading = false
   }
 
+  async refreshMethods() {
+    this.isLoading = true
+    try {
+      let response = await backend.getMethods()
+      this.methods = response.data
+    } catch (err) {
+      this.parseError(err)
+    }
+    this.isLoading = false
+  }
+
   async newCoumpound() {
-     this.model = NO_INSTRUMENT // reset form
+     this.model = EMPTY // reset form
      this.modalShow = true;
   }
 
@@ -137,7 +159,7 @@ async beforeMount() {
       } else {
         await backend.createCompound(this.model)
       }
-      this.model = NO_INSTRUMENT // reset form
+      this.model = EMPTY // reset form
       await this.refreshCompounds()
     } catch (err) {
       this.parseError(err)
@@ -159,7 +181,7 @@ async beforeMount() {
     if (confirm('Are you sure you want to delete this compound?')) {
       // if we are editing a compounds we deleted, remove it from the form
       if (this.model.id === id) {
-        this.model = NO_INSTRUMENT
+        this.model = EMPTY
       }
       await backend.deleteCompound(id)
       await this.refreshCompounds()

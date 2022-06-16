@@ -80,13 +80,13 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Method } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '', technique: '', comment: '', analysis_method: '' }
+const NO_METHOD = { id: '', name: '', technique: '', comment: '', analysis_method: '' }
 
 @Component
 export default class Home extends Vue {
   isLoading: Boolean = false
   methods: Array<Method> = []
-  model: Method = NO_INSTRUMENT
+  model: Method = NO_METHOD
   error: Object = null
   errors: Array<String> = []
 
@@ -116,7 +116,7 @@ export default class Home extends Vue {
       } else {
         await backend.createMethod(this.model)
       }
-      this.model = NO_INSTRUMENT // reset form
+      this.model = NO_METHOD // reset form
       await this.refreshMethods()
     } catch (err) {
       this.parseError(err)
@@ -127,7 +127,7 @@ export default class Home extends Vue {
     if (confirm('Are you sure you want to delete this method?')) {
       // if we are editing a methods we deleted, remove it from the form
       if (this.model.id === id) {
-        this.model = NO_INSTRUMENT
+        this.model = NO_METHOD
       }
       await backend.deleteMethod(id)
       await this.refreshMethods()

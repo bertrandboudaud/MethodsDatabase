@@ -56,13 +56,13 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Column } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '' }
+const EMPTY = { id: '', name: '' }
 
 @Component
 export default class Home extends Vue {
   isLoading: Boolean = false
   columns: Array<Column> = []
-  model: Column = NO_INSTRUMENT
+  model: Column = EMPTY
   error: Object = null
   errors: Array<String> = []
 
@@ -92,7 +92,7 @@ export default class Home extends Vue {
       } else {
         await backend.createColumn(this.model)
       }
-      this.model = NO_INSTRUMENT // reset form
+      this.model = EMPTY // reset form
       await this.refreshColumns()
     } catch (err) {
       this.parseError(err)
@@ -103,7 +103,7 @@ export default class Home extends Vue {
     if (confirm('Are you sure you want to delete this column?')) {
       // if we are editing a columns we deleted, remove it from the form
       if (this.model.id === id) {
-        this.model = NO_INSTRUMENT
+        this.model = EMPTY
       }
       await backend.deleteColumn(id)
       await this.refreshColumns()

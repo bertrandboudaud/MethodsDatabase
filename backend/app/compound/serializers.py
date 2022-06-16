@@ -34,7 +34,7 @@ class CompoundSchema(WrapDataSchema):
     name = fields.Str(required=True)
     iupac = fields.Str(required=True)
     comment = fields.Str()
-    methdod_id = fields.Str()
+    method_id = fields.Str()
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:

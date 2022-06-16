@@ -64,13 +64,13 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Instrument } from '../backend'
 
-const NO_INSTRUMENT = { id: '', name: '', model: '' }
+const EMPTY = { id: '', name: '', model: '' }
 
 @Component
 export default class Home extends Vue {
   isLoading: Boolean = false
   instruments: Array<Instrument> = []
-  model: Instrument = NO_INSTRUMENT
+  model: Instrument = EMPTY
   error: Object = null
   errors: Array<String> = []
 
@@ -100,7 +100,7 @@ export default class Home extends Vue {
       } else {
         await backend.createInstrument(this.model)
       }
-      this.model = NO_INSTRUMENT // reset form
+      this.model = EMPTY // reset form
       await this.refreshInstruments()
     } catch (err) {
       this.parseError(err)
@@ -111,7 +111,7 @@ export default class Home extends Vue {
     if (confirm('Are you sure you want to delete this instrument?')) {
       // if we are editing a instruments we deleted, remove it from the form
       if (this.model.id === id) {
-        this.model = NO_INSTRUMENT
+        this.model = EMPTY
       }
       await backend.deleteInstrument(id)
       await this.refreshInstruments()

@@ -67,6 +67,7 @@ export interface Method {
   eluent_b_id: String
   instrument_id: String
   column_id: String
+  lod: Number
 }
 
 export let backend = {
@@ -252,6 +253,7 @@ export let backend = {
       eluent_b_id : data.eluent_b_id,
       instrument_id : data.instrument_id,
       column_id : data.column_id,
+      lod : data.lod,
     }
     return $axios.post(`methods/`, method).then((response) => response.data)
   },
@@ -266,6 +268,7 @@ export let backend = {
       eluent_b_id : data.eluent_b_id,
       instrument_id : data.instrument_id,
       column_id : data.column_id,
+      lod : data.lod,
     }
     return $axios.post(`methods/${id}`, method).then((response) => response.data)
   },

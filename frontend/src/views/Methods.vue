@@ -33,6 +33,7 @@
             <th>eluent_b</th>
             <th>instrument</th>
             <th>column</th>
+            <th>lod</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -47,6 +48,7 @@
             <td>{{ getEluentNameFromEluentId(method.eluent_b_id) }}</td>
             <td>{{ getInstrumentNameFromInstrumentId(method.instrument_id) }}</td>
             <td>{{ getColumnNameFromColumnId(method.column_id) }}</td>
+            <td>{{ method.lod }}</td>
             <td class="text-right">
               <a href="#" @click="modalShow = !modalShow" @click.prevent="populateMethodToEdit(method)">Edit</a>
               -
@@ -120,6 +122,12 @@
               label="name"
             ></v-select>
           </b-form-group>
+          <b-form-group label="lod">
+            <b-form-input
+              v-model="model.lod"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
         </form>
       </b-modal>
 
@@ -148,7 +156,8 @@ const NO_METHOD = {
   analysis_method: '', 
   eluent_a_id: '', 
   eluent_b_id: '',
-  instrument_id: ''
+  instrument_id: '',
+  lod: 0
  }
 
 @Component

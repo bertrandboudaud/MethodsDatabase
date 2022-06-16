@@ -31,6 +31,7 @@
             <th>analysis_method</th>
             <th>eluent_a</th>
             <th>eluent_b</th>
+            <th>instrument</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -43,6 +44,7 @@
             <td>{{ method.analysis_method }}</td>
             <td>{{ getEluentNameFromEluentId(method.eluent_a_id) }}</td>
             <td>{{ getEluentNameFromEluentId(method.eluent_b_id) }}</td>
+            <td>{{ getInstrumentNameFromInstrumentId(method.instrument_id) }}</td>
             <td class="text-right">
               <a href="#" @click="modalShow = !modalShow" @click.prevent="populateMethodToEdit(method)">Edit</a>
               -
@@ -100,6 +102,14 @@
               label="name"
             ></v-select>
           </b-form-group>
+          <b-form-group label="instrument">
+            <v-select
+              v-model="model.instrument_id"
+              :options="instruments" 
+              :reduce="instrument => instrument.id"
+              label="name"
+            ></v-select>
+          </b-form-group>
         </form>
       </b-modal>
 
@@ -120,13 +130,23 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Method } from '../backend'
 
-const NO_METHOD = { id: '', name: '', technique: '', comment: '', analysis_method: '', eluent_a_id: '', eluent_b_id: '' }
+const NO_METHOD = { 
+  id: '', 
+  name: '', 
+  technique: '', 
+  comment: '', 
+  analysis_method: '', 
+  eluent_a_id: '', 
+  eluent_b_id: '',
+  instrument_id: ''
+ }
 
 @Component
 export default class Home extends Vue {
   isLoading: Boolean = false
   methods: Array<Method> = []
   eluents: Array<Method> = [] // TODO: optimize, we actually only need id and names
+  instruments: Array<Method> = [] // TODO: optimize, we actually only need id and names
   model: Method = NO_METHOD
   error: Object = null
   errors: Array<String> = []
@@ -144,6 +164,7 @@ export default class Home extends Vue {
     this.filter = { name: '' };
     this.refreshMethods()
     this.refreshEluents()
+    this.refreshInstruments()
   }
 
   async refreshMethods() {
@@ -162,6 +183,17 @@ export default class Home extends Vue {
     try {
       let response = await backend.getEluents()
       this.eluents = response.data
+    } catch (err) {
+      this.parseError(err)
+    }
+    this.isLoading = false
+  }
+
+  async refreshInstruments() {
+    this.isLoading = true
+    try {
+      let response = await backend.getInstruments()
+      this.instruments = response.data
     } catch (err) {
       this.parseError(err)
     }
@@ -229,6 +261,19 @@ export default class Home extends Vue {
     if (typeof eluent !== 'undefined')
     {
       return eluent.name
+    }
+    else
+    {
+      return ""
+    }
+  }
+
+  getInstrumentNameFromInstrumentId(eluent_id)
+  {
+    var instrument =  this.instruments.find(instrument => instrument.id === eluent_id)
+    if (typeof instrument !== 'undefined')
+    {
+      return instrument.name
     }
     else
     {

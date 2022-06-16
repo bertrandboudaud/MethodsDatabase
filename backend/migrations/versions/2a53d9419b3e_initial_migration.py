@@ -76,6 +76,7 @@ def upgrade():
     sa.UniqueConstraint('name'),
     sa.Column('eluent_a_id', postgresql.UUID, sa.ForeignKey("eluent.id")),
     sa.Column('eluent_b_id', postgresql.UUID, sa.ForeignKey("eluent.id")),
+    sa.Column('instrument_id', postgresql.UUID, sa.ForeignKey("instrument.id")),
     )
     op.create_table('compound',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),

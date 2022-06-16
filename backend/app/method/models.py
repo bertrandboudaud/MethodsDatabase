@@ -12,6 +12,7 @@ class Method(db.Model):
     analysis_method = db.Column(db.String(80), unique=True, nullable=False)
     eluent_a_id = db.Column(UUID())
     eluent_b_id = db.Column(UUID())
+    instrument_id = db.Column(UUID())
 
     def __init__(self, 
                 id=None,
@@ -20,7 +21,8 @@ class Method(db.Model):
                 comment=None, 
                 analysis_method=None,
                 eluent_a_id=None,
-                eluent_b_id=None):
+                eluent_b_id=None,
+                instrument_id=None):
         if not id:
             id = uuid4()
         self.id = id
@@ -32,6 +34,7 @@ class Method(db.Model):
         self.analysis_method = analysis_method
         self.eluent_a_id = eluent_a_id
         self.eluent_b_id = eluent_b_id
+        self.instrument_id = instrument_id
 
     def __repr__(self):
         return "<Method %r>" % self.name

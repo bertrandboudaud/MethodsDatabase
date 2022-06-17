@@ -40,6 +40,12 @@ class MethodSchema(WrapDataSchema):
     instrument_id = fields.Str()
     column_id = fields.Str()
     lod = fields.Int()
+    lloq = fields.Int()
+    uloq = fields.Int()
+    precision = fields.Int()
+    preferred_sample_volume = fields.Int()
+    runtime = fields.Int()
+    price = fields.Int()
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:

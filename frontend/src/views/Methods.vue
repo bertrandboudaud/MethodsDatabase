@@ -34,6 +34,12 @@
             <th>instrument</th>
             <th>column</th>
             <th>lod</th>
+            <th>lloq</th>
+            <th>uloq</th>
+            <th>precision</th>
+            <th>preferred_sample_volume</th>
+            <th>runtime</th>
+            <th>price</th>
             <th>&nbsp;</th>
           </tr>
         </thead>
@@ -49,6 +55,12 @@
             <td>{{ getInstrumentNameFromInstrumentId(method.instrument_id) }}</td>
             <td>{{ getColumnNameFromColumnId(method.column_id) }}</td>
             <td>{{ method.lod }}</td>
+            <td>{{ method.lloq }}</td>
+            <td>{{ method.uloq }}</td>
+            <td>{{ method.precision }}</td>
+            <td>{{ method.preferred_sample_volume }}</td>
+            <td>{{ method.runtime }}</td>
+            <td>{{ method.price }}</td>
             <td class="text-right">
               <a href="#" @click="modalShow = !modalShow" @click.prevent="populateMethodToEdit(method)">Edit</a>
               -
@@ -128,6 +140,42 @@
               type="number"
             ></b-form-input>
           </b-form-group>
+          <b-form-group label="lloq">
+            <b-form-input
+              v-model="model.lloq"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="uloq">
+            <b-form-input
+              v-model="model.uloq"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="precision">
+            <b-form-input
+              v-model="model.precision"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="preferred_sample_volume">
+            <b-form-input
+              v-model="model.preferred_sample_volume"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="runtime">
+            <b-form-input
+              v-model="model.runtime"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
+          <b-form-group label="price">
+            <b-form-input
+              v-model="model.price"
+              type="number"
+            ></b-form-input>
+          </b-form-group>
         </form>
       </b-modal>
 
@@ -157,7 +205,13 @@ const NO_METHOD = {
   eluent_a_id: '', 
   eluent_b_id: '',
   instrument_id: '',
-  lod: 0
+  lod: 0,
+  lloq: 0,
+  uloq: 0,
+  precision: 0,
+  preferred_sample_volume: 0,
+  runtime: 0,
+  price: 0
  }
 
 @Component

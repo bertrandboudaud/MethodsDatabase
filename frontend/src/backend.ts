@@ -68,6 +68,12 @@ export interface Method {
   instrument_id: String
   column_id: String
   lod: Number
+  lloq: Number
+  uloq: Number
+  precision: Number
+  preferred_sample_volume: Number
+  runtime: Number
+  price: Number
 }
 
 export let backend = {
@@ -254,6 +260,12 @@ export let backend = {
       instrument_id : data.instrument_id,
       column_id : data.column_id,
       lod : data.lod,
+      lloq : data.lloq,
+      uloq : data.uloq,
+      precision : data.precision,
+      preferred_sample_volume : data.preferred_sample_volume,
+      runtime : data.runtime,
+      price : data.price,
     }
     return $axios.post(`methods/`, method).then((response) => response.data)
   },
@@ -269,6 +281,12 @@ export let backend = {
       instrument_id : data.instrument_id,
       column_id : data.column_id,
       lod : data.lod,
+      lloq : data.lloq,
+      uloq : data.uloq,
+      precision : data.precision,
+      preferred_sample_volume : data.preferred_sample_volume,
+      runtime : data.runtime,
+      price : data.price,
     }
     return $axios.post(`methods/${id}`, method).then((response) => response.data)
   },

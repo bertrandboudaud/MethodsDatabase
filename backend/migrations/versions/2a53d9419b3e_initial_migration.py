@@ -79,6 +79,12 @@ def upgrade():
     sa.Column('instrument_id', postgresql.UUID, sa.ForeignKey("instrument.id")),
     sa.Column('column_id', postgresql.UUID, sa.ForeignKey("column.id")),
     sa.Column('lod', sa.Integer()),
+    sa.Column('lloq', sa.Integer()),
+    sa.Column('uloq', sa.Integer()),
+    sa.Column('precision', sa.Integer()),
+    sa.Column('preferred_sample_volume', sa.Integer()),
+    sa.Column('runtime', sa.Integer()),
+    sa.Column('price', sa.Integer()),
     )
     op.create_table('compound',
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),

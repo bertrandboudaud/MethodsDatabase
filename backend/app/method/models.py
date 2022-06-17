@@ -15,6 +15,12 @@ class Method(db.Model):
     instrument_id = db.Column(UUID())
     column_id = db.Column(UUID())
     lod = db.Column(db.Integer())
+    lloq = db.Column(db.Integer())
+    uloq = db.Column(db.Integer())
+    precision = db.Column(db.Integer())
+    preferred_sample_volume = db.Column(db.Integer())
+    runtime = db.Column(db.Integer())
+    price = db.Column(db.Integer())
 
     def __init__(self, 
                 id=None,
@@ -26,7 +32,13 @@ class Method(db.Model):
                 eluent_b_id=None,
                 instrument_id=None,
                 column_id=None,
-                lod=0):
+                lod=0,
+                lloq=0,
+                uloq=0,
+                precision=0,
+                preferred_sample_volume=0,
+                runtime=0,
+                price=0):
         if not id:
             id = uuid4()
         self.id = id
@@ -41,6 +53,12 @@ class Method(db.Model):
         self.instrument_id = instrument_id
         self.column_id = column_id
         self.lod = lod
+        self.lloq = lloq
+        self.uloq = uloq
+        self.precision = precision
+        self.preferred_sample_volume = preferred_sample_volume
+        self.runtime = runtime
+        self.price = price
 
     def __repr__(self):
         return "<Method %r>" % self.name

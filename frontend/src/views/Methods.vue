@@ -310,30 +310,95 @@ export default class Home extends Vue {
     }
   }
 
+  compareString(order, a, b)
+  {
+    if (order === "asc") {
+        return a.localeCompare(b);
+    } else if (order === "desc") {
+        return b.localeCompare(a);
+    } else {
+        return 0;
+    }
+  }
+
+  compare(order, a, b)
+  {
+    if (order === "asc") {
+        return a - b;
+    } else if (order === "desc") {
+        return b - a;
+    } else {
+        return 0;
+    }
+  }
+
   sortChange(params) {
       console.log(this.table_data)
       this.table_data.sort((a, b) => {
-        //console.log("prout")
-        console.log(a.name)
-        console.log(b.name)
-        //console.log(params.name)
-          if (params.name) {
-              if (params.name === "asc") {
-                  return a.name.localeCompare(b.name);
-              } else if (params.name === "desc") {
-                  return b.name.localeCompare(a.name);
-              } else {
-                  return 0;
-              }
-          } else if (params.technique) {
-              if (params.technique === "asc") {
-                  return a.technique.localeCompare(b.technique);
-              } else if (params.technique === "desc") {
-                  return b.technique.localeCompare(a.technique);
-              } else {
-                  return 0;
-              }
-          }
+        if (params.name)
+        {
+          return this.compareString(params.name, a.name, b.name)
+        }
+        else if (params.technique)
+        {
+          return this.compareString(params.technique, a.technique, b.technique)
+        }
+        else if (params.id)
+        {
+          return this.compareString(params.id, a.id, b.id)
+        }
+        else if (params.comment)
+        {
+          return this.compareString(params.comment, a.comment, b.comment)
+        }
+        else if (params.analysis_method)
+        {
+          return this.compareString(params.analysis_method, a.analysis_method, b.analysis_method)
+        }
+        else if (params.eluent_a)
+        {
+          return this.compareString(params.eluent_a, a.eluent_a, b.eluent_a)
+        }
+        else if (params.eluent_b)
+        {
+          return this.compareString(params.eluent_b, a.eluent_b, b.eluent_b)
+        }
+        else if (params.instrument)
+        {
+          return this.compareString(params.instrument, a.instrument, b.instrument)
+        }
+        else if (params.column)
+        {
+          return this.compareString(params.column, a.column, b.column)
+        }
+        else if (params.lod)
+        {
+          return this.compare(params.lod, a.lod, b.lod)
+        }
+        else if (params.lloq)
+        {
+          return this.compare(params.lloq, a.lloq, b.lloq)
+        }
+        else if (params.uloq)
+        {
+          return this.compare(params.uloq, a.uloq, b.uloq)
+        }
+        else if (params.precision)
+        {
+          return this.compare(params.precision, a.precision, b.precision)
+        }
+        else if (params.preferred_sample_volume)
+        {
+          return this.compare(params.preferred_sample_volume, a.preferred_sample_volume, b.preferred_sample_volume)
+        }
+        else if (params.runtime)
+        {
+          return this.compare(params.runtime, a.runtime, b.runtime)
+        }
+        else if (params.price)
+        {
+          return this.compare(params.price, a.price, b.price)
+        }
       });
       console.log(this.table_data)
   }

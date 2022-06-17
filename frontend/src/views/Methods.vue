@@ -21,54 +21,7 @@
 
       <b-button @click="newMethod()">New Method</b-button>
       
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>name</th>
-            <th>technique</th>
-            <th>comment</th>
-            <th>analysis_method</th>
-            <th>eluent_a</th>
-            <th>eluent_b</th>
-            <th>instrument</th>
-            <th>column</th>
-            <th>lod</th>
-            <th>lloq</th>
-            <th>uloq</th>
-            <th>precision</th>
-            <th>preferred_sample_volume</th>
-            <th>runtime</th>
-            <th>price</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="method in methods" :key="method.id">
-            <td>{{ method.id }}</td>
-            <td>{{ method.name }}</td>
-            <td>{{ method.technique }}</td>
-            <td>{{ method.comment }}</td>
-            <td>{{ method.analysis_method }}</td>
-            <td>{{ getEluentNameFromEluentId(method.eluent_a_id) }}</td>
-            <td>{{ getEluentNameFromEluentId(method.eluent_b_id) }}</td>
-            <td>{{ getInstrumentNameFromInstrumentId(method.instrument_id) }}</td>
-            <td>{{ getColumnNameFromColumnId(method.column_id) }}</td>
-            <td>{{ method.lod }}</td>
-            <td>{{ method.lloq }}</td>
-            <td>{{ method.uloq }}</td>
-            <td>{{ method.precision }}</td>
-            <td>{{ method.preferred_sample_volume }}</td>
-            <td>{{ method.runtime }}</td>
-            <td>{{ method.price }}</td>
-            <td class="text-right">
-              <a href="#" @click="modalShow = !modalShow" @click.prevent="populateMethodToEdit(method)">Edit</a>
-              -
-              <a href="#" @click.prevent="deleteMethod(method.id)">Delete</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <ve-table :columns="table_columns" :table-data="table_data" :sort-option="sortOption" ></ve-table>
 
       <b-modal
         id="modal-edit"
@@ -194,7 +147,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 
-import { backend, Method } from '../backend'
+import { backend, Method, Eluent, Instrument, Column } from '../backend'
 
 const NO_METHOD = { 
   id: '', 
@@ -218,28 +171,194 @@ const NO_METHOD = {
 export default class Home extends Vue {
   isLoading: Boolean = false
   methods: Array<Method> = []
-  eluents: Array<Method> = [] // TODO: optimize, we actually only need id and names
-  instruments: Array<Method> = [] // TODO: optimize, we actually only need id and names
-  columns: Array<Method> = [] // TODO: optimize, we actually only need id and names
+  eluents: Array<Eluent> = [] // TODO: optimize, we actually only need id and names
+  instruments: Array<Instrument> = [] // TODO: optimize, we actually only need id and names
+  columns: Array<Column> = [] // TODO: optimize, we actually only need id and names
   model: Method = NO_METHOD
   error: Object = null
   errors: Array<String> = []
   filter: Object = { name: '' }
   showError : Boolean = false
+  table_data = []
+  modalShow : Boolean = false
 
   data() {
     return {
       modalShow : false,
       showError : false,
+      sortOption: {
+          sortChange: (params) => {
+              console.log("sortChange::", params);
+              this.sortChange(params);
+          },
+      },
+      table_columns : [
+        {
+            field: "id",
+            key: "id",
+            title: "id",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "name",
+            key: "name",
+            title: "name",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "technique",
+            key: "technique",
+            title: "technique",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "comment",
+            key: "comment",
+            title: "comment",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "analysis_method",
+            key: "analysis_method",
+            title: "analysis_method",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "eluent_a",
+            key: "eluent_a",
+            title: "eluent_a",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "eluent_b",
+            key: "eluent_b",
+            title: "eluent_b",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "instrument",
+            key: "instrument",
+            title: "instrument",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "column",
+            key: "column",
+            title: "column",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "lod",
+            key: "lod",
+            title: "lod",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "lloq",
+            key: "lloq",
+            title: "lloq",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "uloq",
+            key: "uloq",
+            title: "uloq",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "precision",
+            key: "precision",
+            title: "precision",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "preferred_sample_volume",
+            key: "preferred_sample_volume",
+            title: "preferred_sample_volume",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "runtime",
+            key: "runtime",
+            title: "runtime",
+            align: "center",
+            sortBy: "",
+        },
+        {
+            field: "price",
+            key: "price",
+            title: "price",
+            align: "center",
+            sortBy: "",
+        },
+      ],
+      table_data: []
     }
+  }
+
+  sortChange(params) {
+      console.log(this.table_data)
+      this.table_data.sort((a, b) => {
+        //console.log("prout")
+        console.log(a.name)
+        console.log(b.name)
+        //console.log(params.name)
+          if (params.name) {
+              if (params.name === "asc") {
+                  return a.name.localeCompare(b.name);
+              } else if (params.name === "desc") {
+                  return b.name.localeCompare(a.name);
+              } else {
+                  return 0;
+              }
+          } else if (params.technique) {
+              if (params.technique === "asc") {
+                  return a.technique.localeCompare(b.technique);
+              } else if (params.technique === "desc") {
+                  return b.technique.localeCompare(a.technique);
+              } else {
+                  return 0;
+              }
+          }
+      });
+      console.log(this.table_data)
   }
 
   async beforeMount() {
     this.filter = { name: '' };
-    this.refreshMethods()
-    this.refreshEluents()
-    this.refreshInstruments()
-    this.refreshColumns()
+    this.refreshMethods();
+  }
+
+  refreshTableData() {
+    let new_table_data = []
+    for (let index in this.methods)
+    {
+      let method = this.methods[index]
+      let row = JSON.parse(JSON.stringify(method))
+      console.log(method);
+      console.log(row);
+      row.eluent_a = this.getEluentNameFromEluentId(method.eluent_a_id)
+      row.eluent_b = this.getEluentNameFromEluentId(method.eluent_b_id)
+      row.instrument = this.getInstrumentNameFromInstrumentId(method.instrument_id)
+      row.column = this.getColumnNameFromColumnId(method.column_id)
+      new_table_data.push(row)
+    };
+    this.table_data = new_table_data;
+    console.log(this.table_data)
   }
 
   async refreshMethods() {
@@ -247,43 +366,41 @@ export default class Home extends Vue {
     try {
       let response = await backend.getMethods()
       this.methods = response.data
+      await this.refreshEluents();
+      await this.refreshInstruments();
+      await this.refreshColumns();
     } catch (err) {
       this.parseError(err)
     }
+    this.refreshTableData();
     this.isLoading = false
   }
 
   async refreshEluents() {
-    this.isLoading = true
     try {
       let response = await backend.getEluents()
       this.eluents = response.data
     } catch (err) {
       this.parseError(err)
     }
-    this.isLoading = false
   }
 
   async refreshInstruments() {
-    this.isLoading = true
     try {
       let response = await backend.getInstruments()
       this.instruments = response.data
     } catch (err) {
       this.parseError(err)
     }
-    this.isLoading = false
   }
 
   async refreshColumns() {
-    this.isLoading = true
     try {
       let response = await backend.getColumns()
       this.columns = response.data
     } catch (err) {
       this.parseError(err)
     }
-    this.isLoading = false
   }
 
   async newMethod() {

@@ -181,6 +181,7 @@ export default class Home extends Vue {
   showError : Boolean = false
   table_data = []
   modalShow : Boolean = false
+  table_columns = []
 
   data() {
     return {
@@ -199,6 +200,7 @@ export default class Home extends Vue {
             title: "id",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "name",
@@ -206,6 +208,7 @@ export default class Home extends Vue {
             title: "name",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "technique",
@@ -213,6 +216,7 @@ export default class Home extends Vue {
             title: "technique",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "comment",
@@ -220,6 +224,7 @@ export default class Home extends Vue {
             title: "comment",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "analysis_method",
@@ -227,6 +232,7 @@ export default class Home extends Vue {
             title: "analysis_method",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "eluent_a",
@@ -234,6 +240,7 @@ export default class Home extends Vue {
             title: "eluent_a",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "eluent_b",
@@ -241,6 +248,7 @@ export default class Home extends Vue {
             title: "eluent_b",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "instrument",
@@ -248,6 +256,7 @@ export default class Home extends Vue {
             title: "instrument",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "column",
@@ -255,6 +264,7 @@ export default class Home extends Vue {
             title: "column",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareString,
         },
         {
             field: "lod",
@@ -262,6 +272,7 @@ export default class Home extends Vue {
             title: "lod",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
         {
             field: "lloq",
@@ -269,6 +280,7 @@ export default class Home extends Vue {
             title: "lloq",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
         {
             field: "uloq",
@@ -276,6 +288,7 @@ export default class Home extends Vue {
             title: "uloq",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
         {
             field: "precision",
@@ -283,6 +296,7 @@ export default class Home extends Vue {
             title: "precision",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
         {
             field: "preferred_sample_volume",
@@ -290,6 +304,7 @@ export default class Home extends Vue {
             title: "preferred_sample_volume",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
         {
             field: "runtime",
@@ -297,6 +312,7 @@ export default class Home extends Vue {
             title: "runtime",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
         {
             field: "price",
@@ -304,6 +320,7 @@ export default class Home extends Vue {
             title: "price",
             align: "center",
             sortBy: "",
+            sortFunction: this.compareNumber,
         },
       ],
       table_data: []
@@ -321,7 +338,7 @@ export default class Home extends Vue {
     }
   }
 
-  compare(order, a, b)
+  compareNumber(order, a, b)
   {
     if (order === "asc") {
         return a - b;
@@ -333,74 +350,19 @@ export default class Home extends Vue {
   }
 
   sortChange(params) {
-      console.log(this.table_data)
-      this.table_data.sort((a, b) => {
-        if (params.name)
-        {
-          return this.compareString(params.name, a.name, b.name)
-        }
-        else if (params.technique)
-        {
-          return this.compareString(params.technique, a.technique, b.technique)
-        }
-        else if (params.id)
-        {
-          return this.compareString(params.id, a.id, b.id)
-        }
-        else if (params.comment)
-        {
-          return this.compareString(params.comment, a.comment, b.comment)
-        }
-        else if (params.analysis_method)
-        {
-          return this.compareString(params.analysis_method, a.analysis_method, b.analysis_method)
-        }
-        else if (params.eluent_a)
-        {
-          return this.compareString(params.eluent_a, a.eluent_a, b.eluent_a)
-        }
-        else if (params.eluent_b)
-        {
-          return this.compareString(params.eluent_b, a.eluent_b, b.eluent_b)
-        }
-        else if (params.instrument)
-        {
-          return this.compareString(params.instrument, a.instrument, b.instrument)
-        }
-        else if (params.column)
-        {
-          return this.compareString(params.column, a.column, b.column)
-        }
-        else if (params.lod)
-        {
-          return this.compare(params.lod, a.lod, b.lod)
-        }
-        else if (params.lloq)
-        {
-          return this.compare(params.lloq, a.lloq, b.lloq)
-        }
-        else if (params.uloq)
-        {
-          return this.compare(params.uloq, a.uloq, b.uloq)
-        }
-        else if (params.precision)
-        {
-          return this.compare(params.precision, a.precision, b.precision)
-        }
-        else if (params.preferred_sample_volume)
-        {
-          return this.compare(params.preferred_sample_volume, a.preferred_sample_volume, b.preferred_sample_volume)
-        }
-        else if (params.runtime)
-        {
-          return this.compare(params.runtime, a.runtime, b.runtime)
-        }
-        else if (params.price)
-        {
-          return this.compare(params.price, a.price, b.price)
-        }
-      });
-      console.log(this.table_data)
+    for (let table_column_index in this.table_columns) {
+      let table_column = this.table_columns[table_column_index]
+      console.log(table_column)
+      let table_column_name = table_column.field
+      if (params[table_column_name])
+      {
+        console.log("--> sort")
+        this.table_data.sort((a, b) => {
+          return table_column.sortFunction(params[table_column_name], a[table_column_name], b[table_column_name])
+        })
+        break
+      }
+    }
   }
 
   async beforeMount() {

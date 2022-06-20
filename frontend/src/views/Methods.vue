@@ -2,18 +2,17 @@
 <template>
   <div>
     <div class="container-fluid mt-4">
+      
+      <div v-if="errors">
+        <b-alert variant="danger" v-model="showError" dismissible>
+          <span v-for="error in errors" :key="error">
+              {{ error }}
+          </span>
+        </b-alert>
+      </div>
+      
       <h1 class="h1">Methods</h1>
       <b-alert :show="isLoading" variant="info">Loading...</b-alert>
-
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Primary</button>
-        <div class="dropdown-menu">
-            <a href="#" class="dropdown-item">Action</a>
-            <a href="#" class="dropdown-item">Another action</a>
-            <div class="dropdown-divider"></div>
-            <a href="#" class="dropdown-item">Separated link</a>
-        </div>
-    </div>
 
       <div>
         <vue-good-table
@@ -28,22 +27,6 @@
         >
         <div slot="table-actions">
           	<div slot="table-actions">
-            <div class="btn-group">
-              <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                Show Column
-              </button>
-              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                <li v-for="(column, index) in table_columns" :key="column.key" >
-                  <a class="dropdown-item" href="#">
-                 <!-- <a href="#" class="small" tabIndex="-1" @click.prevent="toggleColumn( index, $event )">
-                  <input :checked="!column.hidden" type="checkbox"/>-->
-                    <!--&nbsp;{{column.label}}-->
-                    {{ index }}: {{ column.key }}
-                  <!--</a> -->
-                  </a>
-                </li>
-              </ul>
-            </div>
             <b-button @click="newMethod()">New Method</b-button>
           </div>
         </div>
@@ -158,14 +141,6 @@
           </b-form-group>
         </form>
       </b-modal>
-
-      <div v-if="errors">
-        <b-alert variant="danger" v-model="showError" dismissible>
-          <span v-for="error in errors" :key="error">
-              {{ error }}
-          </span>
-        </b-alert>
-      </div>
 
     </div>
   </div>

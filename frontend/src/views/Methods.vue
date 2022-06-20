@@ -10,8 +10,7 @@
           </span>
         </b-alert>
       </div>
-      
-      <h1 class="h1">Methods</h1>
+
       <b-alert :show="isLoading" variant="info">Loading...</b-alert>
 
       <div>
@@ -30,6 +29,19 @@
             <b-button @click="newMethod()">New Method</b-button>
           </div>
         </div>
+        
+        <template slot="table-row" slot-scope="props">
+          <span v-if="props.column.field == 'before'">
+            <div class="btn-group" role="group" aria-label="Basic example">
+              <button type="button" class="btn btn-primary btn-sm" @click="editMethod(props.row.id)">Edit</button>
+              <button type="button" class="btn btn-danger btn-sm" @click="deleteMethod(props.row.id)">Delete</button>
+            </div>
+          </span>
+          <span v-else>
+            {{props.formattedRow[props.column.field]}}
+          </span>
+        </template>
+
         </vue-good-table>
       </div>
 
@@ -154,6 +166,7 @@ import { backend, Method, Eluent, Instrument, Column } from '../backend'
 
 const NO_METHOD = { 
   id: '', 
+  column_id : '',
   name: '', 
   technique: '', 
   comment: '', 
@@ -197,6 +210,10 @@ export default class Home extends Vue {
           },
       },
       table_columns : [
+        {
+          label: 'action',
+          field: 'before'
+        },
         {
             field: "id",
             key: "id",
@@ -362,6 +379,17 @@ export default class Home extends Vue {
     }
   }
 
+  editMethod(id) {
+    console.log("Edit " + id)
+    let method = this.methods.find(method => method.id === id)
+    this.model = Object.assign({}, method)
+    this.modalShow = true;
+  }
+
+  showAlert(id, type) {
+      console.log(`You clicked ${type} on row ID ${id}`)
+  }
+
   toggleColumn( index, event ){
       // Set hidden to inverse of what it currently is
       this.$set( this.table_columns[ index ], 'hidden', ! this.table_columns[ index ].hidden );
@@ -472,10 +500,6 @@ export default class Home extends Vue {
   async newMethod() {
      this.model = NO_METHOD // reset form
      this.modalShow = true;
-  }
-
-  async populateMethodToEdit(method) {
-    this.model = Object.assign({}, method)
   }
 
   async saveMethod() {

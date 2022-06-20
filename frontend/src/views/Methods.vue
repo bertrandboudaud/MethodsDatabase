@@ -1,27 +1,54 @@
+
 <template>
   <div>
     <div class="container-fluid mt-4">
       <h1 class="h1">Methods</h1>
       <b-alert :show="isLoading" variant="info">Loading...</b-alert>
 
-      <b-container fluid>
-        <b-row>
-          <b-col sm="3">
-            <label>name</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input
-              v-model="filter.name"
-              type="text"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-button @click="filterMethod()" variant="success">Filter</b-button>
-      </b-container>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown">Primary</button>
+        <div class="dropdown-menu">
+            <a href="#" class="dropdown-item">Action</a>
+            <a href="#" class="dropdown-item">Another action</a>
+            <div class="dropdown-divider"></div>
+            <a href="#" class="dropdown-item">Separated link</a>
+        </div>
+    </div>
 
-      <b-button @click="newMethod()">New Method</b-button>
-      
-      <ve-table :columns="table_columns" :table-data="table_data" :sort-option="sortOption" ></ve-table>
+      <div>
+        <vue-good-table
+          :columns="table_columns"
+          :rows="table_data"
+          :search-options="{
+            enabled: true
+          }"
+          :pagination-options="{
+            enabled: true
+          }">
+        >
+        <div slot="table-actions">
+          	<div slot="table-actions">
+            <div class="btn-group">
+              <button type="button" class="btn btn-secondary dropdown-toggle" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                Show Column
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li v-for="(column, index) in table_columns" :key="column.key" >
+                  <a class="dropdown-item" href="#">
+                 <!-- <a href="#" class="small" tabIndex="-1" @click.prevent="toggleColumn( index, $event )">
+                  <input :checked="!column.hidden" type="checkbox"/>-->
+                    <!--&nbsp;{{column.label}}-->
+                    {{ index }}: {{ column.key }}
+                  <!--</a> -->
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <b-button @click="newMethod()">New Method</b-button>
+          </div>
+        </div>
+        </vue-good-table>
+      </div>
 
       <b-modal
         id="modal-edit"
@@ -145,6 +172,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, Method, Eluent, Instrument, Column } from '../backend'
@@ -197,134 +225,171 @@ export default class Home extends Vue {
         {
             field: "id",
             key: "id",
-            title: "id",
+            label: "id",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "name",
             key: "name",
-            title: "name",
+            label: "name",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "technique",
             key: "technique",
-            title: "technique",
+            label: "technique",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "comment",
             key: "comment",
-            title: "comment",
+            label: "comment",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "analysis_method",
             key: "analysis_method",
-            title: "analysis_method",
+            label: "analysis_method",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "eluent_a",
             key: "eluent_a",
-            title: "eluent_a",
+            label: "eluent_a",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "eluent_b",
             key: "eluent_b",
-            title: "eluent_b",
+            label: "eluent_b",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "instrument",
             key: "instrument",
-            title: "instrument",
+            label: "instrument",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "column",
             key: "column",
-            title: "column",
+            label: "column",
             align: "center",
             sortBy: "",
+            type: 'string',
             sortFunction: this.compareString,
+            hidden: false
         },
         {
             field: "lod",
             key: "lod",
-            title: "lod",
+            label: "lod",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
         {
             field: "lloq",
             key: "lloq",
-            title: "lloq",
+            label: "lloq",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
         {
             field: "uloq",
             key: "uloq",
-            title: "uloq",
+            label: "uloq",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
         {
             field: "precision",
             key: "precision",
-            title: "precision",
+            label: "precision",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
         {
             field: "preferred_sample_volume",
             key: "preferred_sample_volume",
-            title: "preferred_sample_volume",
+            label: "preferred_sample_volume",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
         {
             field: "runtime",
             key: "runtime",
-            title: "runtime",
+            label: "runtime",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
         {
             field: "price",
             key: "price",
-            title: "price",
+            label: "price",
             align: "center",
             sortBy: "",
+            type: 'decimal',
             sortFunction: this.compareNumber,
+            hidden: false
         },
       ],
       table_data: []
     }
+  }
+
+  toggleColumn( index, event ){
+      // Set hidden to inverse of what it currently is
+      this.$set( this.table_columns[ index ], 'hidden', ! this.table_columns[ index ].hidden );
   }
 
   compareString(order, a, b)
@@ -356,7 +421,6 @@ export default class Home extends Vue {
       let table_column_name = table_column.field
       if (params[table_column_name])
       {
-        console.log("--> sort")
         this.table_data.sort((a, b) => {
           return table_column.sortFunction(params[table_column_name], a[table_column_name], b[table_column_name])
         })

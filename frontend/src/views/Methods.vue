@@ -48,7 +48,7 @@
       <b-modal
         id="modal-edit"
         ref="modal"
-        v-model="modalShow"
+        v-model="showEditor"
         :title="model.id ? 'Edit Method ID#' + model.id : 'New Compound'"
         @ok="saveMethod"
       >
@@ -196,19 +196,13 @@ export default class Home extends Vue {
   filter: Object = { name: '' }
   showError : Boolean = false
   table_data = []
-  modalShow : Boolean = false
+  showEditor : Boolean = false
   table_columns = []
 
   data() {
     return {
-      modalShow : false,
+      showEditor : false,
       showError : false,
-      sortOption: {
-          sortChange: (params) => {
-              console.log("sortChange::", params);
-              this.sortChange(params);
-          },
-      },
       table_columns : [
         {
           label: 'action',
@@ -219,9 +213,7 @@ export default class Home extends Vue {
             key: "id",
             label: "id",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -229,9 +221,7 @@ export default class Home extends Vue {
             key: "name",
             label: "name",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -239,9 +229,7 @@ export default class Home extends Vue {
             key: "technique",
             label: "technique",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -249,9 +237,7 @@ export default class Home extends Vue {
             key: "comment",
             label: "comment",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -259,9 +245,7 @@ export default class Home extends Vue {
             key: "analysis_method",
             label: "analysis_method",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -269,9 +253,7 @@ export default class Home extends Vue {
             key: "eluent_a",
             label: "eluent_a",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -279,9 +261,7 @@ export default class Home extends Vue {
             key: "eluent_b",
             label: "eluent_b",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -289,9 +269,7 @@ export default class Home extends Vue {
             key: "instrument",
             label: "instrument",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -299,9 +277,7 @@ export default class Home extends Vue {
             key: "column",
             label: "column",
             align: "center",
-            sortBy: "",
             type: 'string',
-            sortFunction: this.compareString,
             hidden: false
         },
         {
@@ -309,9 +285,7 @@ export default class Home extends Vue {
             key: "lod",
             label: "lod",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
         {
@@ -319,9 +293,7 @@ export default class Home extends Vue {
             key: "lloq",
             label: "lloq",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
         {
@@ -329,9 +301,7 @@ export default class Home extends Vue {
             key: "uloq",
             label: "uloq",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
         {
@@ -339,9 +309,7 @@ export default class Home extends Vue {
             key: "precision",
             label: "precision",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
         {
@@ -349,9 +317,7 @@ export default class Home extends Vue {
             key: "preferred_sample_volume",
             label: "preferred_sample_volume",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
         {
@@ -359,9 +325,7 @@ export default class Home extends Vue {
             key: "runtime",
             label: "runtime",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
         {
@@ -369,66 +333,11 @@ export default class Home extends Vue {
             key: "price",
             label: "price",
             align: "center",
-            sortBy: "",
             type: 'decimal',
-            sortFunction: this.compareNumber,
             hidden: false
         },
       ],
       table_data: []
-    }
-  }
-
-  editMethod(id) {
-    console.log("Edit " + id)
-    let method = this.methods.find(method => method.id === id)
-    this.model = Object.assign({}, method)
-    this.modalShow = true;
-  }
-
-  showAlert(id, type) {
-      console.log(`You clicked ${type} on row ID ${id}`)
-  }
-
-  toggleColumn( index, event ){
-      // Set hidden to inverse of what it currently is
-      this.$set( this.table_columns[ index ], 'hidden', ! this.table_columns[ index ].hidden );
-  }
-
-  compareString(order, a, b)
-  {
-    if (order === "asc") {
-        return a.localeCompare(b);
-    } else if (order === "desc") {
-        return b.localeCompare(a);
-    } else {
-        return 0;
-    }
-  }
-
-  compareNumber(order, a, b)
-  {
-    if (order === "asc") {
-        return a - b;
-    } else if (order === "desc") {
-        return b - a;
-    } else {
-        return 0;
-    }
-  }
-
-  sortChange(params) {
-    for (let table_column_index in this.table_columns) {
-      let table_column = this.table_columns[table_column_index]
-      console.log(table_column)
-      let table_column_name = table_column.field
-      if (params[table_column_name])
-      {
-        this.table_data.sort((a, b) => {
-          return table_column.sortFunction(params[table_column_name], a[table_column_name], b[table_column_name])
-        })
-        break
-      }
     }
   }
 
@@ -499,7 +408,14 @@ export default class Home extends Vue {
 
   async newMethod() {
      this.model = NO_METHOD // reset form
-     this.modalShow = true;
+     this.showEditor = true;
+  }
+
+  editMethod(id) {
+    console.log("Edit " + id)
+    let method = this.methods.find(method => method.id === id)
+    this.model = Object.assign({}, method)
+    this.showEditor = true;
   }
 
   async saveMethod() {
@@ -514,17 +430,6 @@ export default class Home extends Vue {
     } catch (err) {
       this.parseError(err)
     }
-  }
-
-  async filterMethod() {
-    this.isLoading = true
-    try {
-      let response = await backend.getCompounds(this.filter)
-      this.methods = response.data
-    } catch (err) {
-      this.parseError(err)
-    }
-    this.isLoading = false
   }
 
   async deleteMethod(id) {

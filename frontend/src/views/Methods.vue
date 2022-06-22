@@ -86,40 +86,72 @@ export default class Methods extends Main {
           label: "eluent a",
           align: "center",
           type: 'string',
-          hidden: false,
+          hidden: true,
           options: function (self) { return self.eluents },
           reduce: function (eluent) { return eluent.id; },
           editable: true
+        },
+        {
+          field: "eluent_a_name",
+          label: "eluent a",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: false
         },
         {
           field: "eluent_b_id",
           label: "eluent b",
           align: "center",
           type: 'string',
-          hidden: false,
+          hidden: true,
           options: function (self) { return self.eluents },
           reduce: function (eluent) { return eluent.id; },
           editable: true
+        },
+        {
+          field: "eluent_b_name",
+          label: "eluent b",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: false
         },
         {
           field: "instrument_id",
           label: "instrument",
           align: "center",
           type: 'string',
-          hidden: false,
+          hidden: true,
           options: function (self) { return self.instruments },
           reduce: function (instrument) { return instrument.id; },
           editable: true
+        },
+        {
+          field: "instrument_name",
+          label: "instrument",
+          align: "center",
+          type: 'string',
+          hidden: true,
+          editable: false
         },
         {
           field: "column_id",
           label: "column",
           align: "center",
           type: 'string',
-          hidden: false,
+          hidden: true,
           options: function (self) { return self.columns },
           reduce: function (column) { return column.id; },
           editable: true
+        },
+        {
+          field: "column_name",
+          label: "column",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: false
         },
         {
           field: "lod",
@@ -191,10 +223,10 @@ export default class Methods extends Main {
     for (let index in this.methods) {
       let method = this.methods[index]
       let row = JSON.parse(JSON.stringify(method))
-      row.eluent_a = this.getEluentNameFromEluentId(method.eluent_a_id)
-      row.eluent_b = this.getEluentNameFromEluentId(method.eluent_b_id)
-      row.instrument = this.getInstrumentNameFromInstrumentId(method.instrument_id)
-      row.column = this.getColumnNameFromColumnId(method.column_id)
+      row.eluent_a_name = this.getEluentNameFromEluentId(method.eluent_a_id)
+      row.eluent_b_name = this.getEluentNameFromEluentId(method.eluent_b_id)
+      row.instrument_name = this.getInstrumentNameFromInstrumentId(method.instrument_id)
+      row.column_name = this.getColumnNameFromColumnId(method.column_id)
       new_table_data.push(row)
     };
     this.table_data = new_table_data;

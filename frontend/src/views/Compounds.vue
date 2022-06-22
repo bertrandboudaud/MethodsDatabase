@@ -57,10 +57,18 @@ export default class Compounds extends Main {
           label: "method",
           align: "center",
           type: 'string',
-          hidden: false,
+          hidden: true,
           editable: true,
           options: function (self) { return self.methods },
-          reduce: function (method) { return method.id; }
+          reduce: function (method) { return method.id; } 
+        },
+        {
+          field: "method_name",
+          label: "method",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: false
         }
       ],
       table_data: []
@@ -76,7 +84,7 @@ export default class Compounds extends Main {
     for (let index in this.compounds) {
       let compound = this.compounds[index]
       let row = JSON.parse(JSON.stringify(compound))
-      row.method = this.getMethodNameFromMethodId(compound.method_id)
+      row.method_name = this.getMethodNameFromMethodId(compound.method_id)
       new_table_data.push(row)
     };
     this.table_data = new_table_data;

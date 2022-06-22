@@ -100,6 +100,7 @@ export let backend = {
 
   updateUser(id, data) {
     let user = {
+      id: id,
       username: data.username,
       email: data.email,
     }
@@ -132,6 +133,7 @@ export let backend = {
 
   updateInstrument(id, data) {
     let instrument = {
+      id: id,
       name: data.name,
       model: data.model,
     }
@@ -198,6 +200,7 @@ export let backend = {
 
   updateEluent(id, data) {
     let eluent = {
+      id: id,
       name: data.name,
     }
     return $axios.post(`eluents/${id}`, eluent).then((response) => response.data)
@@ -228,6 +231,7 @@ export let backend = {
 
   updateColumn(id, data) {
     let column = {
+      id: id,
       name: data.name,
     }
     return $axios.post(`columns/${id}`, column).then((response) => response.data)
@@ -272,6 +276,7 @@ export let backend = {
 
   updateMethod(id, data) {
     let method = {
+      id: id,
       name: data.name,
       technique: data.technique,
       comment: data.comment,

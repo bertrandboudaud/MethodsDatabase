@@ -30,14 +30,14 @@ def validate_unique_field(
         raise ValidationError("{} should be unique: {}".format(name, value), name)
 
 class EluentSchema(WrapDataSchema):
-    id = fields.Str(dump_only=True)
+    id = fields.Str()
     name = fields.Str(required=True)
 
     @validates_schema
     def validate_unique_fields(self, data: JSON, partial: bool, many: bool) -> None:
         id = None
-        if "eluent" in self.context:
-            id = self.context["eluent"].id
+        if "id" in data:
+            id = data["id"]
 
         name = data.get("name")
         validate_unique_field("name", name, id)

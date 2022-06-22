@@ -26,15 +26,15 @@
         >
         <div slot="table-actions">
           	<div slot="table-actions">
-            <b-button @click="newMethod()">New Method</b-button>
+            <b-button @click="newItem()">New Method</b-button>
           </div>
         </div>
         
         <template slot="table-row" slot-scope="props">
           <span v-if="props.column.field == 'before'">
             <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-primary btn-sm" @click="editMethod(props.row.id)">Edit</button>
-              <button type="button" class="btn btn-danger btn-sm" @click="deleteMethod(props.row.id)">Delete</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="editItem(props.row.id)">Edit</button>
+              <button type="button" class="btn btn-danger btn-sm" @click="deleteItem(props.row.id)">Delete</button>
             </div>
           </span>
           <span v-else>
@@ -50,9 +50,9 @@
         ref="modal"
         v-model="showEditor"
         :title="model.id ? 'Edit Method ID#' + model.id : 'New Method'"
-        @ok="saveMethod"
+        @ok="saveItem"
       >
-      <form @submit.prevent="saveMethod">
+      <form @submit.prevent="saveItem">
         <div v-for="column in table_columns" :key="column.field">
           <b-form-group v-if="(column.field in model) && column.editable" :label="column.label">
             <v-select v-if="'options' in column"
@@ -333,18 +333,18 @@ export default class Home extends Vue {
     }
   }
 
-  async newMethod() {
+  async newItem() {
      this.model = NO_METHOD // reset form
      this.showEditor = true;
   }
 
-  editMethod(id) {
+  editItem(id) {
     let method = this.methods.find(method => method.id === id)
     this.model = Object.assign({}, method)
     this.showEditor = true;
   }
 
-  async saveMethod() {
+  async saveItem() {
     try {
       if (this.model.id) {
         await backend.updateMethod(this.model.id, this.model)
@@ -358,7 +358,7 @@ export default class Home extends Vue {
     }
   }
 
-  async deleteMethod(id) {
+  async deleteItem(id) {
     if (confirm('Are you sure you want to delete this method?')) {
       // if we are editing a methods we deleted, remove it from the form
       if (this.model.id === id) {

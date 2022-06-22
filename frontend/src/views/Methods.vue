@@ -49,109 +49,26 @@
         id="modal-edit"
         ref="modal"
         v-model="showEditor"
-        :title="model.id ? 'Edit Method ID#' + model.id : 'New Compound'"
+        :title="model.id ? 'Edit Method ID#' + model.id : 'New Method'"
         @ok="saveMethod"
       >
-        <form @submit.prevent="saveMethod">
-          <b-form-group label="name">
-            <b-form-input
-              v-model="model.name"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="technique">
-            <b-form-input
-              v-model="model.technique"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="comment">
-            <b-form-input
-              v-model="model.comment"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="analysis_method">
-            <b-form-input
-              v-model="model.analysis_method"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="eluent a">
-            <v-select
-              v-model="model.eluent_a_id"
-              :options="eluents" 
-              :reduce="eluent => eluent.id"
+      <form @submit.prevent="saveMethod">
+        <div v-for="column in table_columns" :key="column.field">
+          <b-form-group v-if="(column.field in model) && column.editable" :label="column.label">
+            <v-select v-if="'options' in column"
+              v-model="model[column.field]"
+              :options=getOptions(column) 
+              :reduce=column.reduce
               label="name"
             ></v-select>
+            <b-form-input v-else
+              v-model="model[column.field]"
+              type="text"
+            >
+            </b-form-input> 
           </b-form-group>
-          <b-form-group label="eluent b">
-            <v-select
-              v-model="model.eluent_b_id"
-              :options="eluents" 
-              :reduce="eluent => eluent.id"
-              label="name"
-            ></v-select>
-          </b-form-group>
-          <b-form-group label="instrument">
-            <v-select
-              v-model="model.instrument_id"
-              :options="instruments" 
-              :reduce="instrument => instrument.id"
-              label="name"
-            ></v-select>
-          </b-form-group>
-          <b-form-group label="column">
-            <v-select
-              v-model="model.column_id"
-              :options="columns" 
-              :reduce="column => column.id"
-              label="name"
-            ></v-select>
-          </b-form-group>
-          <b-form-group label="lod">
-            <b-form-input
-              v-model="model.lod"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="lloq">
-            <b-form-input
-              v-model="model.lloq"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="uloq">
-            <b-form-input
-              v-model="model.uloq"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="precision">
-            <b-form-input
-              v-model="model.precision"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="preferred_sample_volume">
-            <b-form-input
-              v-model="model.preferred_sample_volume"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="runtime">
-            <b-form-input
-              v-model="model.runtime"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="price">
-            <b-form-input
-              v-model="model.price"
-              type="number"
-            ></b-form-input>
-          </b-form-group>
-        </form>
+        </div>
+      </form>
       </b-modal>
 
     </div>
@@ -199,6 +116,11 @@ export default class Home extends Vue {
   showEditor : Boolean = false
   table_columns = []
 
+  getOptions(column)
+  {
+    return column.options(this)
+  }
+
   data() {
     return {
       showEditor : false,
@@ -210,131 +132,139 @@ export default class Home extends Vue {
         },
         {
             field: "id",
-            key: "id",
             label: "id",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: true,
+            editable: false
         },
         {
             field: "name",
-            key: "name",
             label: "name",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "technique",
-            key: "technique",
             label: "technique",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "comment",
-            key: "comment",
             label: "comment",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "analysis_method",
-            key: "analysis_method",
             label: "analysis_method",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
-            field: "eluent_a",
-            key: "eluent_a",
-            label: "eluent_a",
+            field: "eluent_a_id",
+            label: "eluent a",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            options: function (self) { return self.eluents},
+            reduce: function (eluent) { return eluent.id; },
+            editable: true
         },
         {
-            field: "eluent_b",
-            key: "eluent_b",
-            label: "eluent_b",
+            field: "eluent_b_id",
+            label: "eluent b",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            options: function (self) { return self.eluents},
+            reduce: function (eluent) { return eluent.id; },
+            editable: true
         },
         {
-            field: "instrument",
-            key: "instrument",
+            field: "instrument_id",
             label: "instrument",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            options: function (self) { return self.instruments},
+            reduce: function (instrument) { return instrument.id; },
+            editable: true
         },
         {
-            field: "column",
-            key: "column",
+            field: "column_id",
             label: "column",
             align: "center",
             type: 'string',
-            hidden: false
+            hidden: false,
+            options: function (self) { return self.columns},
+            reduce: function (column) { return column.id; },
+            editable: true
         },
         {
             field: "lod",
-            key: "lod",
             label: "lod",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "lloq",
-            key: "lloq",
             label: "lloq",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "uloq",
-            key: "uloq",
             label: "uloq",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "precision",
-            key: "precision",
             label: "precision",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "preferred_sample_volume",
-            key: "preferred_sample_volume",
             label: "preferred_sample_volume",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "runtime",
-            key: "runtime",
             label: "runtime",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
         {
             field: "price",
-            key: "price",
             label: "price",
             align: "center",
             type: 'decimal',
-            hidden: false
+            hidden: false,
+            editable: true
         },
       ],
       table_data: []
@@ -352,8 +282,6 @@ export default class Home extends Vue {
     {
       let method = this.methods[index]
       let row = JSON.parse(JSON.stringify(method))
-      console.log(method);
-      console.log(row);
       row.eluent_a = this.getEluentNameFromEluentId(method.eluent_a_id)
       row.eluent_b = this.getEluentNameFromEluentId(method.eluent_b_id)
       row.instrument = this.getInstrumentNameFromInstrumentId(method.instrument_id)
@@ -361,7 +289,6 @@ export default class Home extends Vue {
       new_table_data.push(row)
     };
     this.table_data = new_table_data;
-    console.log(this.table_data)
   }
 
   async refreshMethods() {
@@ -412,7 +339,6 @@ export default class Home extends Vue {
   }
 
   editMethod(id) {
-    console.log("Edit " + id)
     let method = this.methods.find(method => method.id === id)
     this.model = Object.assign({}, method)
     this.showEditor = true;

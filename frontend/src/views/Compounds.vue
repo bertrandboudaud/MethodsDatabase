@@ -1,123 +1,85 @@
-<template>
-  <div>
-    <div class="container-fluid mt-4">
-      <h1 class="h1">Compounds</h1>
-      <b-alert :show="isLoading" variant="info">Loading...</b-alert>
-        
-      <b-container fluid>
-        <b-row>
-          <b-col sm="3">
-            <label>name</label>
-          </b-col>
-          <b-col sm="9">
-            <b-form-input
-              v-model="filter.name"
-              type="text"
-            ></b-form-input>
-          </b-col>
-        </b-row>
-        <b-button @click="filterCompound()" variant="success">Filter</b-button>
-      </b-container>
-
-      <b-button @click="newCoumpound()">New Compound</b-button>
-      
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>name</th>
-            <th>iupac</th>
-            <th>method</th>
-            <th>&nbsp;</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="compound in compounds" :key="compound.id">
-            <td>{{ compound.id }}</td>
-            <td>{{ compound.name }}</td>
-            <td>{{ compound.iupac }}</td>
-            <td>{{ getMethodNameFromMethodId(compound.method_id) }}</td>
-            <td class="text-right">
-              <a href="#" @click="modalShow = !modalShow" @click.prevent="populateCompoundToEdit(compound)">Edit</a>
-              -
-              <a href="#" @click.prevent="deleteCompound(compound.id)">Delete</a>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <b-modal
-        id="modal-edit"
-        ref="modal"
-        v-model="modalShow"
-        :title="model.id ? 'Edit Compound ID#' + model.id : 'New Compound'"
-        @ok="saveCompound"
-      >
-        <form @submit.prevent="saveCompound">
-          <b-form-group label="name">
-            <b-form-input
-              v-model="model.name"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="iupac">
-            <b-form-input
-              v-model="model.iupac"
-              type="text"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group label="Method">
-            <v-select
-              v-model="model.method_id"
-              :options="methods" 
-              :reduce="method => method.id"
-              label="name"
-            ></v-select>
-          </b-form-group>
-        </form>
-      </b-modal>
-
-      <div v-if="errors">
-        <b-alert variant="danger" v-model="showError" dismissible>
-          <span v-for="error in errors" :key="error">
-              {{ error }}
-          </span>
-        </b-alert>
-      </div>
-
-    </div>
-  </div>
-</template>
 
 <script lang="ts">
+
 import { Component, Vue } from 'vue-property-decorator'
+import Main from '@/components/Main.vue'
+import { backend, Compound, Eluent, Instrument, Column } from '../backend'
 
-import { backend, Compound, Method } from '../backend'
-
-const EMPTY = { id: '', name: '', iupac: '', method_id: '' }
+const EMPTY_ITEM = {
+  id: '',
+  column_id: '',
+  name: '',
+  iupac: '',
+  method_id: ''
+}
 
 @Component
-export default class Home extends Vue {
-  isLoading: Boolean = false
+export default class Compounds extends Main {
   compounds: Array<Compound> = []
   methods: Array<Method> = [] // TODO: optimize, we actually only need id and names
-  model: Compound = EMPTY
-  error: Object = null
-  errors: Array<String> = []
-  filter: Object = { name: '' }
-  showError : Boolean = false
+  model: Compound = EMPTY_ITEM
 
   data() {
     return {
-      modalShow : false,
-      showError : false,
+      showEditor: false,
+      showError: false,
+      table_columns: [
+        {
+          label: 'action',
+          field: 'before'
+        },
+        {
+          field: "id",
+          label: "id",
+          align: "center",
+          type: 'string',
+          hidden: true,
+          editable: false
+        },
+        {
+          field: "name",
+          label: "name",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: true
+        },
+        {
+          field: "iupac",
+          label: "iupac",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: true
+        },
+        {
+          field: "method_id",
+          label: "method",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: true,
+          options: function (self) { return self.methods },
+          reduce: function (method) { return method.id; }
+        }
+      ],
+      table_data: []
     }
   }
 
   async beforeMount() {
-    this.filter = { name: '' };
-    this.refreshCompounds()
-    this.refreshMethods()
+    this.refreshCompounds();
+  }
+
+  refreshTableData() {
+    let new_table_data = []
+    for (let index in this.compounds) {
+      let compound = this.compounds[index]
+      let row = JSON.parse(JSON.stringify(compound))
+      row.method = this.getMethodNameFromMethodId(compound.method_id)
+      new_table_data.push(row)
+    };
+    this.table_data = new_table_data;
   }
 
   async refreshCompounds() {
@@ -125,91 +87,68 @@ export default class Home extends Vue {
     try {
       let response = await backend.getCompounds()
       this.compounds = response.data
+      await this.refreshMethods();
     } catch (err) {
       this.parseError(err)
     }
+    this.refreshTableData();
     this.isLoading = false
   }
 
   async refreshMethods() {
-    this.isLoading = true
     try {
       let response = await backend.getMethods()
       this.methods = response.data
     } catch (err) {
       this.parseError(err)
     }
-    this.isLoading = false
   }
 
-  async newCoumpound() {
-     this.model = EMPTY // reset form
-     this.modalShow = true;
+  async newItem() {
+    this.model = EMPTY_ITEM // reset form
+    this.showEditor = true;
   }
 
-  async populateCompoundToEdit(compound) {
+  editItem(id) {
+    let compound = this.compounds.find(compound => compound.id === id)
     this.model = Object.assign({}, compound)
+    this.showEditor = true;
   }
 
-  async saveCompound() {
+  async saveItem() {
     try {
       if (this.model.id) {
         await backend.updateCompound(this.model.id, this.model)
       } else {
         await backend.createCompound(this.model)
       }
-      this.model = EMPTY // reset form
+      this.model = EMPTY_ITEM // reset form
       await this.refreshCompounds()
     } catch (err) {
       this.parseError(err)
     }
   }
 
-  async filterCompound() {
-    this.isLoading = true
-    try {
-      let response = await backend.getCompounds(this.filter)
-      this.compounds = response.data
-    } catch (err) {
-      this.parseError(err)
-    }
-    this.isLoading = false
-  }
-
-  async deleteCompound(id) {
+  async deleteItem(id) {
     if (confirm('Are you sure you want to delete this compound?')) {
       // if we are editing a compounds we deleted, remove it from the form
       if (this.model.id === id) {
-        this.model = EMPTY
+        this.model = EMPTY_ITEM
       }
       await backend.deleteCompound(id)
       await this.refreshCompounds()
     }
   }
 
-  parseError(error) {
-    this.error = error
-    this.errors = []
-    this.showError = false
-    if (error) {
-      for (let idx in error.response.data.errors) {
-        this.errors.push(idx + ': ' + error.response.data.errors[idx])
-      }
-      this.showError = true
-    }
-  }
-
-  getMethodNameFromMethodId(method_id)
-  {
-    var method =  this.methods.find(method => method.id === method_id)
-    if (typeof method !== 'undefined')
-    {
+  getMethodNameFromMethodId(method_id) {
+    var method = this.methods.find(method => method.id === method_id)
+    if (typeof method !== 'undefined') {
       return method.name
     }
-    else
-    {
+    else {
       return ""
     }
   }
+
 }
 </script>

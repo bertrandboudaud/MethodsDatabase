@@ -5,7 +5,6 @@
         <b-nav-item to="/">Home</b-nav-item> |
         <b-nav-item to="/compounds">Compounds</b-nav-item> |
         <b-nav-item to="/methods">Methods</b-nav-item> |
-        <b-nav-item to="/users">Users</b-nav-item> |
         <b-nav-item to="/instruments">Instruments</b-nav-item> |
         <b-nav-item to="/eluents">Eluents</b-nav-item> |
         <b-nav-item to="/columns">Columns</b-nav-item> |

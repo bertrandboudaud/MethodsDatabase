@@ -3,7 +3,7 @@
 
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
-import { backend, Method, Eluent, Instrument, Column } from '../backend'
+import { backend, BackendMethod, BackendEluent, BackendInstrument, BackendColumn } from '../backend'
 
 const EMPTY_ITEM = {
   id: '',
@@ -25,12 +25,12 @@ const EMPTY_ITEM = {
 }
 
 @Component
-export default class Methods extends Main {
-  methods: Array<Method> = []
-  eluents: Array<Eluent> = [] // TODO: optimize, we actually only need id and names
-  instruments: Array<Instrument> = [] // TODO: optimize, we actually only need id and names
-  columns: Array<Column> = [] // TODO: optimize, we actually only need id and names
-  model: Method = EMPTY_ITEM
+export default class MethodsList extends Main {
+  methods: Array<BackendMethod> = []
+  eluents: Array<BackendEluent> = [] // TODO: optimize, we actually only need id and names
+  instruments: Array<BackendInstrument> = [] // TODO: optimize, we actually only need id and names
+  columns: Array<BackendColumn> = [] // TODO: optimize, we actually only need id and names
+  model: BackendMethod = EMPTY_ITEM
 
   data() {
     return {

@@ -2,11 +2,11 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Home from './views/Home.vue'
 import Users from './views/Users.vue'
-import Instruments from './views/Instruments.vue'
-import Compounds from './views/Compounds.vue'
-import Eluents from './views/Eluents.vue'
-import Columns from './views/Columns.vue'
-import Methods from './views/Methods.vue'
+import InstrumentsList from './views/InstrumentsList.vue'
+import CompoundsList from './views/CompoundsList.vue'
+import EluentsList from './views/EluentsList.vue'
+import ColumnsList from './views/ColumnsList.vue'
+import MethodsList from './views/MethodsList.vue'
 
 Vue.use(Router)
 
@@ -27,27 +27,27 @@ export default new Router({
     {
       path: '/instruments',
       name: 'instruments',
-      component: Instruments,
+      component: InstrumentsList,
     },
     {
       path: '/compounds',
       name: 'compounds',
-      component: Compounds,
+      component: CompoundsList,
     },
     {
       path: '/methods',
       name: 'methods',
-      component: Methods,
+      component: MethodsList,
     },
     {
       path: '/eluents',
       name: 'eluents',
-      component: Eluents,
+      component: EluentsList,
     },
     {
       path: '/columns',
       name: 'columns',
-      component: Columns,
+      component: ColumnsList,
     },
   ],
 })

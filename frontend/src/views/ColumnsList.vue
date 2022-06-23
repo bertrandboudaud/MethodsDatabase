@@ -3,7 +3,7 @@
 
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
-import { backend, Eluent } from '../backend'
+import { backend, BackendColumn } from '../backend'
 
 const EMPTY_ITEM = {
   id: '',
@@ -11,9 +11,9 @@ const EMPTY_ITEM = {
 }
 
 @Component
-export default class Eluents extends Main {
-  eluents: Array<Eluent> = []
-  model: Eluent = EMPTY_ITEM
+export default class ColumnsList extends Main {
+  columns: Array<BackendColumn> = []
+  model: BackendColumn = EMPTY_ITEM
 
   data() {
     return {
@@ -46,24 +46,24 @@ export default class Eluents extends Main {
   }
 
   async beforeMount() {
-    this.refreshEluents();
+    this.refreshColumns();
   }
 
   refreshTableData() {
     let new_table_data = []
-    for (let index in this.eluents) {
-      let eluent = this.eluents[index]
-      let row = JSON.parse(JSON.stringify(eluent))
+    for (let index in this.columns) {
+      let column = this.columns[index]
+      let row = JSON.parse(JSON.stringify(column))
       new_table_data.push(row)
     };
     this.table_data = new_table_data;
   }
 
-  async refreshEluents() {
+  async refreshColumns() {
     this.isLoading = true
     try {
-      let response = await backend.getEluents()
-      this.eluents = response.data
+      let response = await backend.getColumns()
+      this.columns = response.data
     } catch (err) {
       this.parseError(err)
     }
@@ -77,32 +77,32 @@ export default class Eluents extends Main {
   }
 
   editItem(id) {
-    let eluent = this.eluents.find(eluent => eluent.id === id)
-    this.model = Object.assign({}, eluent)
+    let column = this.columns.find(column => column.id === id)
+    this.model = Object.assign({}, column)
     this.showEditor = true;
   }
 
   async saveItem() {
     try {
       if (this.model.id) {
-        await backend.updateEluent(this.model.id, this.model)
+        await backend.updateColumn(this.model.id, this.model)
       } else {
-        await backend.createEluent(this.model)
+        await backend.createColumn(this.model)
       }
       this.model = EMPTY_ITEM // reset form
-      await this.refreshEluents()
+      await this.refreshColumns()
     } catch (err) {
       this.parseError(err)
     }
   }
 
   async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this eluent?')) {
+    if (confirm('Are you sure you want to delete this column?')) {
       if (this.model.id === id) {
         this.model = EMPTY_ITEM
       }
-      await backend.deleteEluent(id)
-      await this.refreshEluents()
+      await backend.deleteColumn(id)
+      await this.refreshColumns()
     }
   }
 

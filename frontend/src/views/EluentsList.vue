@@ -3,7 +3,7 @@
 
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
-import { backend, Instrument } from '../backend'
+import { backend, BackendEluent } from '../backend'
 
 const EMPTY_ITEM = {
   id: '',
@@ -11,9 +11,9 @@ const EMPTY_ITEM = {
 }
 
 @Component
-export default class Instruments extends Main {
-  instruments: Array<Instrument> = []
-  model: Instrument = EMPTY_ITEM
+export default class EluentsList extends Main {
+  eluents: Array<BackendEluent> = []
+  model: BackendEluent = EMPTY_ITEM
 
   data() {
     return {
@@ -39,14 +39,6 @@ export default class Instruments extends Main {
           type: 'string',
           hidden: false,
           editable: true
-        },
-        {
-          field: "model",
-          label: "model",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
         }
       ],
       table_data: []
@@ -54,24 +46,24 @@ export default class Instruments extends Main {
   }
 
   async beforeMount() {
-    this.refreshInstruments();
+    this.refreshEluents();
   }
 
   refreshTableData() {
     let new_table_data = []
-    for (let index in this.instruments) {
-      let instrument = this.instruments[index]
-      let row = JSON.parse(JSON.stringify(instrument))
+    for (let index in this.eluents) {
+      let eluent = this.eluents[index]
+      let row = JSON.parse(JSON.stringify(eluent))
       new_table_data.push(row)
     };
     this.table_data = new_table_data;
   }
 
-  async refreshInstruments() {
+  async refreshEluents() {
     this.isLoading = true
     try {
-      let response = await backend.getInstruments()
-      this.instruments = response.data
+      let response = await backend.getEluents()
+      this.eluents = response.data
     } catch (err) {
       this.parseError(err)
     }
@@ -85,32 +77,32 @@ export default class Instruments extends Main {
   }
 
   editItem(id) {
-    let instrument = this.instruments.find(instrument => instrument.id === id)
-    this.model = Object.assign({}, instrument)
+    let eluent = this.eluents.find(eluent => eluent.id === id)
+    this.model = Object.assign({}, eluent)
     this.showEditor = true;
   }
 
   async saveItem() {
     try {
       if (this.model.id) {
-        await backend.updateInstrument(this.model.id, this.model)
+        await backend.updateEluent(this.model.id, this.model)
       } else {
-        await backend.createInstrument(this.model)
+        await backend.createEluent(this.model)
       }
       this.model = EMPTY_ITEM // reset form
-      await this.refreshInstruments()
+      await this.refreshEluents()
     } catch (err) {
       this.parseError(err)
     }
   }
 
   async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this instrument?')) {
+    if (confirm('Are you sure you want to delete this eluent?')) {
       if (this.model.id === id) {
         this.model = EMPTY_ITEM
       }
-      await backend.deleteInstrument(id)
-      await this.refreshInstruments()
+      await backend.deleteEluent(id)
+      await this.refreshEluents()
     }
   }
 

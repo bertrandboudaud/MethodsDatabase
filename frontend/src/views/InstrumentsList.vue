@@ -3,17 +3,18 @@
 
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
-import { backend, Column } from '../backend'
+import { backend, BackendInstrument } from '../backend'
 
 const EMPTY_ITEM = {
   id: '',
-  name: ''
+  name: '',
+  model: ''
 }
 
 @Component
-export default class Columns extends Main {
-  columns: Array<Column> = []
-  model: Column = EMPTY_ITEM
+export default class InstrumentsList extends Main {
+  instruments: Array<BackendInstrument> = []
+  model: BackendInstrument = EMPTY_ITEM
 
   data() {
     return {
@@ -39,6 +40,14 @@ export default class Columns extends Main {
           type: 'string',
           hidden: false,
           editable: true
+        },
+        {
+          field: "model",
+          label: "model",
+          align: "center",
+          type: 'string',
+          hidden: false,
+          editable: true
         }
       ],
       table_data: []
@@ -46,24 +55,24 @@ export default class Columns extends Main {
   }
 
   async beforeMount() {
-    this.refreshColumns();
+    this.refreshInstruments();
   }
 
   refreshTableData() {
     let new_table_data = []
-    for (let index in this.columns) {
-      let column = this.columns[index]
-      let row = JSON.parse(JSON.stringify(column))
+    for (let index in this.instruments) {
+      let instrument = this.instruments[index]
+      let row = JSON.parse(JSON.stringify(instrument))
       new_table_data.push(row)
     };
     this.table_data = new_table_data;
   }
 
-  async refreshColumns() {
+  async refreshInstruments() {
     this.isLoading = true
     try {
-      let response = await backend.getColumns()
-      this.columns = response.data
+      let response = await backend.getInstruments()
+      this.instruments = response.data
     } catch (err) {
       this.parseError(err)
     }
@@ -77,32 +86,32 @@ export default class Columns extends Main {
   }
 
   editItem(id) {
-    let column = this.columns.find(column => column.id === id)
-    this.model = Object.assign({}, column)
+    let instrument = this.instruments.find(instrument => instrument.id === id)
+    this.model = Object.assign({}, instrument)
     this.showEditor = true;
   }
 
   async saveItem() {
     try {
       if (this.model.id) {
-        await backend.updateColumn(this.model.id, this.model)
+        await backend.updateInstrument(this.model.id, this.model)
       } else {
-        await backend.createColumn(this.model)
+        await backend.createInstrument(this.model)
       }
       this.model = EMPTY_ITEM // reset form
-      await this.refreshColumns()
+      await this.refreshInstruments()
     } catch (err) {
       this.parseError(err)
     }
   }
 
   async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this column?')) {
+    if (confirm('Are you sure you want to delete this instrument?')) {
       if (this.model.id === id) {
         this.model = EMPTY_ITEM
       }
-      await backend.deleteColumn(id)
-      await this.refreshColumns()
+      await backend.deleteInstrument(id)
+      await this.refreshInstruments()
     }
   }
 

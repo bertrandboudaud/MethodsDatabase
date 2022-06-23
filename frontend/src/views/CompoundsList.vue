@@ -3,7 +3,7 @@
 
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
-import { backend, Compound, Eluent, Instrument, Column } from '../backend'
+import { backend, BackendCompound, BackendMethod } from '../backend'
 
 const EMPTY_ITEM = {
   id: '',
@@ -14,10 +14,10 @@ const EMPTY_ITEM = {
 }
 
 @Component
-export default class Compounds extends Main {
-  compounds: Array<Compound> = []
-  methods: Array<Method> = [] // TODO: optimize, we actually only need id and names
-  model: Compound = EMPTY_ITEM
+export default class CompoundsList extends Main {
+  compounds: Array<BackendCompound> = []
+  methods: Array<BackendMethod> = [] // TODO: optimize, we actually only need id and names
+  model: BackendCompound = EMPTY_ITEM
 
   data() {
     return {

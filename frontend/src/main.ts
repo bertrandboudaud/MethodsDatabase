@@ -11,9 +11,13 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 import 'vue-select/dist/vue-select.css'
 import 'vue-good-table/dist/vue-good-table.css'
 
+import Item from '@/components/Item.vue' 
+
 Vue.use(BootstrapVue)
 Vue.component('v-select', vSelect);
 Vue.use(VueGoodTablePlugin);
+
+Vue.component('Item', Item);
 
 Vue.config.productionTip = false
 

@@ -51,23 +51,7 @@
         :title="model.id ? 'Edit Method ID#' + model.id : 'New Method'"
         @ok="saveItem"
       >
-      <form @submit.prevent="saveItem">
-        <div v-for="column in table_columns" :key="column.field">
-          <b-form-group v-if="(column.field in model) && column.editable" :label="column.label">
-            <v-select v-if="'options' in column"
-              v-model="model[column.field]"
-              :options=getOptions(column) 
-              :reduce=column.reduce
-              label="name"
-            ></v-select>
-            <b-form-input v-else
-              v-model="model[column.field]"
-              type="text"
-            >
-            </b-form-input> 
-          </b-form-group>
-        </div>
-      </form>
+      <item :model="model" :options="getOptions" :description="getTableColumn()" />
       </b-modal>
 
     </div>
@@ -87,6 +71,15 @@ export default class Main extends Vue {
   table_data = []
   showEditor : Boolean = false
   table_columns = []
+
+  getTableColumn()
+  {
+    return this.table_columns;
+  }
+
+  components: {
+    Item
+  }
 
   getOptions(column) {
     return column.options(this)
@@ -114,6 +107,5 @@ export default class Main extends Vue {
     }
   }
 }
-
 
 </script>

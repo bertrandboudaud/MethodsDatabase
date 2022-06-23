@@ -34,30 +34,30 @@ export interface User {
   email: String
 }
 
-export interface Instrument {
+export interface BackendInstrument {
   id: String
   name: String
   model: String
 }
 
-export interface Compound {
+export interface BackendCompound {
   id: String
   name: String
   iupac: String
   method_id: String
 }
 
-export interface Eluent {
+export interface BackendEluent {
   id: String
   name: String
 }
 
-export interface Column {
+export interface BackendColumn {
   id: String
   name: String
 }
 
-export interface Method {
+export interface BackendMethod {
   id: String
   name: String
   technique: String

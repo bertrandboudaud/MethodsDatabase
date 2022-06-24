@@ -4,6 +4,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
 import { backend, BackendEluent } from '../backend'
+import { EluentDescription } from '../descriptions'
 
 const EMPTY_ITEM = {
   id: '',
@@ -19,29 +20,8 @@ export default class EluentsList extends Main {
     return {
       showEditor: false,
       showError: false,
-      table_columns: [
-        {
-          label: 'action',
-          field: 'before'
-        },
-        {
-          field: "id",
-          label: "id",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          editable: false
-        },
-        {
-          field: "name",
-          label: "name",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        }
-      ],
-      table_data: []
+      table_data: [],
+      descriptions: EluentDescription.getFields(),
     }
   }
 
@@ -76,8 +56,8 @@ export default class EluentsList extends Main {
     this.showEditor = true;
   }
 
-  editItem(id) {
-    let eluent = this.eluents.find(eluent => eluent.id === id)
+  editItem(column_name, row_id) {
+    let eluent = this.eluents.find(eluent => eluent.id === row_id)
     this.model = Object.assign({}, eluent)
     this.showEditor = true;
   }

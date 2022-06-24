@@ -14,7 +14,7 @@
 
       <div>
         <vue-good-table
-          :columns="table_columns"
+          :columns="descriptions"
           :rows="table_data"
           :search-options="{
             enabled: true
@@ -32,9 +32,12 @@
         <template slot="table-row" slot-scope="props">
           <span v-if="props.column.field == 'before'">
             <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-primary btn-sm" @click="editItem(props.row.id)">Edit</button>
-              <button type="button" class="btn btn-danger btn-sm" @click="deleteItem(props.row.id)">Delete</button>
+              <button type="button" class="btn btn-primary btn-sm" @click="editItem(props.column.field, props.row.id)">View</button>
             </div>
+          </span>
+          <span v-if="'hovered' in getDescription(props.column.field)">
+            {{props.formattedRow[props.column.field]}}
+            <button type="button" class="btn btn-primary btn-sm" @click="editItem(props.column.field, props.row.id)">View</button>
           </span>
           <span v-else>
             {{props.formattedRow[props.column.field]}}
@@ -44,15 +47,15 @@
         </vue-good-table>
       </div>
 
-      <b-modal
+    <b-modal
         id="modal-edit"
         ref="modal"
         v-model="showEditor"
-        :title="model.id ? 'Edit Method ID#' + model.id : 'New Method'"
-        @ok="saveItem"
-      >
-      <item :model="model" :options="getOptions" :description="getTableColumn()" />
-      </b-modal>
+        hide-footer
+        hide-header
+    >
+      <item :modelname="edit_modelname" :id="edit_id" :modalref="getModalRef" v-on:onModelChanged="onModelChanged"/>
+    </b-modal>
 
     </div>
   </div>
@@ -70,11 +73,25 @@ export default class Main extends Vue {
   showError : Boolean = false
   table_data = []
   showEditor : Boolean = false
-  table_columns = []
+  descriptions = []
+  edit_descriptions = []
 
-  getTableColumn()
-  {
-    return this.table_columns;
+  onModelChanged() {
+    console.log("onModelChanged")
+    this.showEditor = false;
+    this.loadData()
+  }
+
+  loadData() {
+    console.log("refreshTableData from base class")
+  }
+
+  getModalRef() {
+    return this.$refs["modal"];
+  }
+
+  getEditDescription() {
+    return this.edit_descriptions;
   }
 
   components: {
@@ -88,7 +105,7 @@ export default class Main extends Vue {
   async newItem() {
   }
   
-  editItem(id) {
+  editItem(column_name, row_id) {
   }
 
   async saveItem() {
@@ -105,6 +122,10 @@ export default class Main extends Vue {
         this.errors.push(idx + ': ' + error.response.data.errors[idx])
       }
     }
+  }
+
+  getDescription(field) {
+    return this.descriptions.find(description => description.field === field)
   }
 }
 

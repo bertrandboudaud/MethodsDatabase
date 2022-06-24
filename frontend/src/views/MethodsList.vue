@@ -4,6 +4,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
 import { backend, BackendMethod, BackendEluent, BackendInstrument, BackendColumn } from '../backend'
+import { MethodDescription } from '../descriptions'
 
 const EMPTY_ITEM = {
   id: '',
@@ -36,181 +37,8 @@ export default class MethodsList extends Main {
     return {
       showEditor: false,
       showError: false,
-      table_columns: [
-        {
-          label: 'action',
-          field: 'before'
-        },
-        {
-          field: "id",
-          label: "id",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          editable: false
-        },
-        {
-          field: "name",
-          label: "name",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "technique",
-          label: "technique",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "comment",
-          label: "comment",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "analysis_method",
-          label: "analysis_method",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "eluent_a_id",
-          label: "eluent a",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          options: function (self) { return self.eluents },
-          reduce: function (eluent) { return eluent.id; },
-          editable: true
-        },
-        {
-          field: "eluent_a_name",
-          label: "eluent a",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: false
-        },
-        {
-          field: "eluent_b_id",
-          label: "eluent b",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          options: function (self) { return self.eluents },
-          reduce: function (eluent) { return eluent.id; },
-          editable: true
-        },
-        {
-          field: "eluent_b_name",
-          label: "eluent b",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: false
-        },
-        {
-          field: "instrument_id",
-          label: "instrument",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          options: function (self) { return self.instruments },
-          reduce: function (instrument) { return instrument.id; },
-          editable: true
-        },
-        {
-          field: "instrument_name",
-          label: "instrument",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          editable: false
-        },
-        {
-          field: "column_id",
-          label: "column",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          options: function (self) { return self.columns },
-          reduce: function (column) { return column.id; },
-          editable: true
-        },
-        {
-          field: "column_name",
-          label: "column",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: false
-        },
-        {
-          field: "lod",
-          label: "lod",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "lloq",
-          label: "lloq",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "uloq",
-          label: "uloq",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "precision",
-          label: "precision",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "preferred_sample_volume",
-          label: "preferred_sample_volume",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "runtime",
-          label: "runtime",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "price",
-          label: "price",
-          align: "center",
-          type: 'decimal',
-          hidden: false,
-          editable: true
-        },
-      ],
-      table_data: []
+      table_data: [],
+      descriptions: MethodDescription.getFields(),
     }
   }
 
@@ -279,8 +107,8 @@ export default class MethodsList extends Main {
     this.showEditor = true;
   }
 
-  editItem(id) {
-    let method = this.methods.find(method => method.id === id)
+  editItem(column_name, row_id) {
+    let method = this.methods.find(method => method.id === row_id)
     this.model = Object.assign({}, method)
     this.showEditor = true;
   }

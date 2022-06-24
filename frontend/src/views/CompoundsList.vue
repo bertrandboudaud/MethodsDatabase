@@ -4,79 +4,30 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
 import { backend, BackendCompound, BackendMethod } from '../backend'
-
-const EMPTY_ITEM = {
-  id: '',
-  column_id: '',
-  name: '',
-  iupac: '',
-  method_id: ''
-}
+import { CompoundDescription, MethodDescription } from '../descriptions'
 
 @Component
 export default class CompoundsList extends Main {
   compounds: Array<BackendCompound> = []
   methods: Array<BackendMethod> = [] // TODO: optimize, we actually only need id and names
-  model: BackendCompound = EMPTY_ITEM
 
   data() {
     return {
       showEditor: false,
       showError: false,
-      table_columns: [
-        {
-          label: 'action',
-          field: 'before'
-        },
-        {
-          field: "id",
-          label: "id",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          editable: false
-        },
-        {
-          field: "name",
-          label: "name",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "iupac",
-          label: "iupac",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "method_id",
-          label: "method",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          editable: true,
-          options: function (self) { return self.methods },
-          reduce: function (method) { return method.id; } 
-        },
-        {
-          field: "method_name",
-          label: "method",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: false
-        }
-      ],
-      table_data: []
+      table_data: [],
+      descriptions: CompoundDescription.getFields(),
+      edit_modelname : "",
+      edit_id : ""
     }
   }
 
-  async beforeMount() {
+  loadData() {
     this.refreshCompounds();
+  }
+
+  async beforeMount() {
+    this.loadData()
   }
 
   refreshTableData() {
@@ -95,7 +46,7 @@ export default class CompoundsList extends Main {
     try {
       let response = await backend.getCompounds()
       this.compounds = response.data
-      await this.refreshMethods();
+      await this.refreshMethods()
     } catch (err) {
       this.parseError(err)
     }
@@ -113,39 +64,25 @@ export default class CompoundsList extends Main {
   }
 
   async newItem() {
-    this.model = EMPTY_ITEM // reset form
-    this.showEditor = true;
+    this.edit_modelname = "compound"
+    this.edit_id = ""
+    this.showEditor = true
   }
 
-  editItem(id) {
-    let compound = this.compounds.find(compound => compound.id === id)
-    this.model = Object.assign({}, compound)
-    this.showEditor = true;
-  }
-
-  async saveItem() {
-    try {
-      if (this.model.id) {
-        await backend.updateCompound(this.model.id, this.model)
-      } else {
-        await backend.createCompound(this.model)
-      }
-      this.model = EMPTY_ITEM // reset form
-      await this.refreshCompounds()
-    } catch (err) {
-      this.parseError(err)
+  editItem(column_name, row_id) {
+    console.log("editItem " + column_name)
+    let compound = this.compounds.find(compound => compound.id === row_id)
+    if (column_name === "method_name")
+    {
+      this.edit_modelname = "method"
+      this.edit_id = compound.method_id
     }
-  }
-
-  async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this compound?')) {
-      // if we are editing a compounds we deleted, remove it from the form
-      if (this.model.id === id) {
-        this.model = EMPTY_ITEM
-      }
-      await backend.deleteCompound(id)
-      await this.refreshCompounds()
+    else
+    {
+      this.edit_modelname = "compound"
+      this.edit_id = compound.id
     }
+    this.showEditor = true;
   }
 
   getMethodNameFromMethodId(method_id) {

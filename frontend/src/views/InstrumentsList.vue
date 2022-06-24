@@ -4,6 +4,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import Main from '@/components/Main.vue'
 import { backend, BackendInstrument } from '../backend'
+import { InstrumentDescription } from '../descriptions'
 
 const EMPTY_ITEM = {
   id: '',
@@ -20,37 +21,8 @@ export default class InstrumentsList extends Main {
     return {
       showEditor: false,
       showError: false,
-      table_columns: [
-        {
-          label: 'action',
-          field: 'before'
-        },
-        {
-          field: "id",
-          label: "id",
-          align: "center",
-          type: 'string',
-          hidden: true,
-          editable: false
-        },
-        {
-          field: "name",
-          label: "name",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        },
-        {
-          field: "model",
-          label: "model",
-          align: "center",
-          type: 'string',
-          hidden: false,
-          editable: true
-        }
-      ],
-      table_data: []
+      table_data: [],
+      descriptions: InstrumentDescription.getFields(),
     }
   }
 
@@ -85,8 +57,8 @@ export default class InstrumentsList extends Main {
     this.showEditor = true;
   }
 
-  editItem(id) {
-    let instrument = this.instruments.find(instrument => instrument.id === id)
+  editItem(column_name, row_id) {
+    let instrument = this.instruments.find(instrument => instrument.id === row_id)
     this.model = Object.assign({}, instrument)
     this.showEditor = true;
   }

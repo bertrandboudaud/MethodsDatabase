@@ -6,16 +6,9 @@ import Main from '@/components/Main.vue'
 import { backend, BackendInstrument } from '../backend'
 import { InstrumentDescription } from '../descriptions'
 
-const EMPTY_ITEM = {
-  id: '',
-  name: '',
-  model: ''
-}
-
 @Component
 export default class InstrumentsList extends Main {
   instruments: Array<BackendInstrument> = []
-  model: BackendInstrument = EMPTY_ITEM
 
   data() {
     return {
@@ -23,11 +16,17 @@ export default class InstrumentsList extends Main {
       showError: false,
       table_data: [],
       descriptions: InstrumentDescription.getFields(),
+      edit_modelname : "",
+      edit_id : ""
     }
   }
 
-  async beforeMount() {
+  loadData() {
     this.refreshInstruments();
+  }
+
+  async beforeMount() {
+    this.loadData();
   }
 
   refreshTableData() {
@@ -53,38 +52,17 @@ export default class InstrumentsList extends Main {
   }
 
   async newItem() {
-    this.model = EMPTY_ITEM // reset form
-    this.showEditor = true;
+    this.edit_modelname = "instrument"
+    this.edit_id = ""
+    this.showEditor = true
   }
 
   editItem(column_name, row_id) {
+    console.log("editItem " + column_name)
     let instrument = this.instruments.find(instrument => instrument.id === row_id)
-    this.model = Object.assign({}, instrument)
+    this.edit_modelname = "instrument"
+    this.edit_id = instrument.id
     this.showEditor = true;
-  }
-
-  async saveItem() {
-    try {
-      if (this.model.id) {
-        await backend.updateInstrument(this.model.id, this.model)
-      } else {
-        await backend.createInstrument(this.model)
-      }
-      this.model = EMPTY_ITEM // reset form
-      await this.refreshInstruments()
-    } catch (err) {
-      this.parseError(err)
-    }
-  }
-
-  async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this instrument?')) {
-      if (this.model.id === id) {
-        this.model = EMPTY_ITEM
-      }
-      await backend.deleteInstrument(id)
-      await this.refreshInstruments()
-    }
   }
 
 }

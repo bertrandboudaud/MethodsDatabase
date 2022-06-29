@@ -200,7 +200,8 @@ export class MethodDescription {
       align: "center",
       type: 'string',
       hidden: false,
-      editable: false
+      editable: false,
+      hovered: function(method) {}
     },
     {
       field: "eluent_b_id",
@@ -218,7 +219,8 @@ export class MethodDescription {
       align: "center",
       type: 'string',
       hidden: false,
-      editable: false
+      editable: false,
+      hovered: function(method) {}
     },
     {
       field: "instrument_id",
@@ -236,7 +238,8 @@ export class MethodDescription {
       align: "center",
       type: 'string',
       hidden: true,
-      editable: false
+      editable: false,
+      hovered: function(method) {}
     },
     {
       field: "column_id",
@@ -254,7 +257,8 @@ export class MethodDescription {
       align: "center",
       type: 'string',
       hidden: false,
-      editable: false
+      editable: false,
+      hovered: function(method) {}
     },
     {
       field: "lod",

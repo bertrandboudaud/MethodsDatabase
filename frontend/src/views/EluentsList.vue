@@ -6,15 +6,9 @@ import Main from '@/components/Main.vue'
 import { backend, BackendEluent } from '../backend'
 import { EluentDescription } from '../descriptions'
 
-const EMPTY_ITEM = {
-  id: '',
-  name: ''
-}
-
 @Component
 export default class EluentsList extends Main {
   eluents: Array<BackendEluent> = []
-  model: BackendEluent = EMPTY_ITEM
 
   data() {
     return {
@@ -22,11 +16,17 @@ export default class EluentsList extends Main {
       showError: false,
       table_data: [],
       descriptions: EluentDescription.getFields(),
+      edit_modelname : "",
+      edit_id : ""
     }
   }
 
-  async beforeMount() {
+  loadData() {
     this.refreshEluents();
+  }
+
+  async beforeMount() {
+    this.loadData();
   }
 
   refreshTableData() {
@@ -52,38 +52,17 @@ export default class EluentsList extends Main {
   }
 
   async newItem() {
-    this.model = EMPTY_ITEM // reset form
-    this.showEditor = true;
+    this.edit_modelname = "eluent"
+    this.edit_id = ""
+    this.showEditor = true
   }
 
   editItem(column_name, row_id) {
+    console.log("editItem " + column_name)
     let eluent = this.eluents.find(eluent => eluent.id === row_id)
-    this.model = Object.assign({}, eluent)
+    this.edit_modelname = "eluent"
+    this.edit_id = eluent.id
     this.showEditor = true;
-  }
-
-  async saveItem() {
-    try {
-      if (this.model.id) {
-        await backend.updateEluent(this.model.id, this.model)
-      } else {
-        await backend.createEluent(this.model)
-      }
-      this.model = EMPTY_ITEM // reset form
-      await this.refreshEluents()
-    } catch (err) {
-      this.parseError(err)
-    }
-  }
-
-  async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this eluent?')) {
-      if (this.model.id === id) {
-        this.model = EMPTY_ITEM
-      }
-      await backend.deleteEluent(id)
-      await this.refreshEluents()
-    }
   }
 
 }

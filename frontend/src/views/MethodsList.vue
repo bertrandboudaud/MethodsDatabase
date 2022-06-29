@@ -6,32 +6,12 @@ import Main from '@/components/Main.vue'
 import { backend, BackendMethod, BackendEluent, BackendInstrument, BackendColumn } from '../backend'
 import { MethodDescription } from '../descriptions'
 
-const EMPTY_ITEM = {
-  id: '',
-  column_id: '',
-  name: '',
-  technique: '',
-  comment: '',
-  analysis_method: '',
-  eluent_a_id: '',
-  eluent_b_id: '',
-  instrument_id: '',
-  lod: 0,
-  lloq: 0,
-  uloq: 0,
-  precision: 0,
-  preferred_sample_volume: 0,
-  runtime: 0,
-  price: 0
-}
-
 @Component
 export default class MethodsList extends Main {
   methods: Array<BackendMethod> = []
   eluents: Array<BackendEluent> = [] // TODO: optimize, we actually only need id and names
   instruments: Array<BackendInstrument> = [] // TODO: optimize, we actually only need id and names
   columns: Array<BackendColumn> = [] // TODO: optimize, we actually only need id and names
-  model: BackendMethod = EMPTY_ITEM
 
   data() {
     return {
@@ -39,11 +19,17 @@ export default class MethodsList extends Main {
       showError: false,
       table_data: [],
       descriptions: MethodDescription.getFields(),
+      edit_modelname : "",
+      edit_id : ""
     }
   }
 
-  async beforeMount() {
+  loadData() {
     this.refreshMethods();
+  }
+
+  async beforeMount() {
+    this.loadData();
   }
 
   refreshTableData() {
@@ -103,39 +89,40 @@ export default class MethodsList extends Main {
   }
 
   async newItem() {
-    this.model = EMPTY_ITEM // reset form
-    this.showEditor = true;
+    this.edit_modelname = "method"
+    this.edit_id = ""
+    this.showEditor = true
   }
 
   editItem(column_name, row_id) {
+    console.log("editItem " + column_name)
     let method = this.methods.find(method => method.id === row_id)
-    this.model = Object.assign({}, method)
+    if (column_name === "eluent_a_name")
+    {
+      this.edit_modelname = "eluent"
+      this.edit_id = method.eluent_a_id
+    }
+    else if (column_name === "eluent_b_name")
+    {
+      this.edit_modelname = "eluent"
+      this.edit_id = method.eluent_b_id
+    }
+    else if (column_name === "instrument_name")
+    {
+      this.edit_modelname = "instrument"
+      this.edit_id = method.instrument_id
+    }
+    else if (column_name === "column_name")
+    {
+      this.edit_modelname = "column"
+      this.edit_id = method.column_id
+    }
+    else
+    {
+      this.edit_modelname = "method"
+      this.edit_id = method.id
+    }
     this.showEditor = true;
-  }
-
-  async saveItem() {
-    try {
-      if (this.model.id) {
-        await backend.updateMethod(this.model.id, this.model)
-      } else {
-        await backend.createMethod(this.model)
-      }
-      this.model = EMPTY_ITEM // reset form
-      await this.refreshMethods()
-    } catch (err) {
-      this.parseError(err)
-    }
-  }
-
-  async deleteItem(id) {
-    if (confirm('Are you sure you want to delete this method?')) {
-      // if we are editing a methods we deleted, remove it from the form
-      if (this.model.id === id) {
-        this.model = EMPTY_ITEM
-      }
-      await backend.deleteMethod(id)
-      await this.refreshMethods()
-    }
   }
 
   getEluentNameFromEluentId(eluent_id) {

@@ -25,19 +25,19 @@
         >
         <div slot="table-actions">
           	<div slot="table-actions">
-            <b-button @click="newItem()">New Method</b-button>
+            <b-button @click="newItem()">Create New</b-button>
           </div>
         </div>
         
         <template slot="table-row" slot-scope="props">
           <span v-if="props.column.field == 'before'">
             <div class="btn-group" role="group" aria-label="Basic example">
-              <button type="button" class="btn btn-primary btn-sm" @click="editItem(props.column.field, props.row.id)">View</button>
+              <button type="button" class="btn btn-outline-primary btn-sm" @click="editItem(props.column.field, props.row.id)">&#x1f50e;</button>
             </div>
           </span>
           <span v-if="'hovered' in getDescription(props.column.field)">
             {{props.formattedRow[props.column.field]}}
-            <button type="button" class="btn btn-primary btn-sm" @click="editItem(props.column.field, props.row.id)">View</button>
+            <button type="button" class="btn btn-outline-primary btn-sm" @click="editItem(props.column.field, props.row.id)">&#x1f50e;</button>
           </span>
           <span v-else>
             {{props.formattedRow[props.column.field]}}
@@ -53,6 +53,7 @@
         v-model="showEditor"
         hide-footer
         hide-header
+        size="xl"
     >
       <item :modelname="edit_modelname" :id="edit_id" :modalref="getModalRef" v-on:onModelChanged="onModelChanged"/>
     </b-modal>

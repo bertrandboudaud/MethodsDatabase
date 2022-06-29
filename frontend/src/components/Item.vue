@@ -3,7 +3,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 
 import { backend, BackendCompound, BackendMethod } from '../backend'
-import { CompoundDescription, MethodDescription } from '../descriptions'
+import { CompoundDescription, MethodDescription, InstrumentDescription, EluentDescription, ColumnDescription } from '../descriptions'
 
 export default {
   model : {},
@@ -42,7 +42,24 @@ export default {
         if (this.modelname === "method")
         {
           if (this.id === "") {
-            this.model = {}
+            this.model = {
+              id: '',
+              column_id: '',
+              name: '',
+              technique: '',
+              comment: '',
+              analysis_method: '',
+              eluent_a_id: '',
+              eluent_b_id: '',
+              instrument_id: '',
+              lod: 0,
+              lloq: 0,
+              uloq: 0,
+              precision: 0,
+              preferred_sample_volume: 0,
+              runtime: 0,
+              price: 0
+            }
           }
           else {
             let response = await backend.getMethod(this.id)
@@ -70,6 +87,49 @@ export default {
           }
           await this.refreshMethods()
           this.descriptions = CompoundDescription.getFields()
+        }
+        else if (this.modelname === "instrument")
+        {
+          if (this.id === "") {
+            this.model = {
+              id: '',
+              name: '',
+              model: ''
+            }
+          }
+          else {
+            let response = await backend.getInstrument(this.id)
+            this.model = response.data        
+          }
+          this.descriptions = InstrumentDescription.getFields()
+        }
+        else if (this.modelname === "eluent")
+        {
+          if (this.id === "") {
+            this.model = {
+              id: '',
+              name: ''
+            }
+          }
+          else {
+            let response = await backend.getEluent(this.id)
+            this.model = response.data        
+          }
+          this.descriptions = EluentDescription.getFields()
+        }
+        else if (this.modelname === "column")
+        {
+          if (this.id === "") {
+            this.model = {
+              id: '',
+              name: ''
+            }
+          }
+          else {
+            let response = await backend.getColumn(this.id)
+            this.model = response.data        
+          }
+          this.descriptions = ColumnDescription.getFields()
         }
       } catch (err) {
         this.parseError(err)
@@ -150,6 +210,30 @@ export default {
             await backend.updateMethod(this.model["id"], this.model)
           } else {
             await backend.createMethod(this.model)
+          }
+        }
+        else if (this.modelname === "instrument")
+        {
+          if (this.model["id"]) {
+            await backend.updateInstrument(this.model["id"], this.model)
+          } else {
+            await backend.createInstrument(this.model)
+          }
+        }
+        else if (this.modelname === "eluent")
+        {
+          if (this.model["id"]) {
+            await backend.updateEluent(this.model["id"], this.model)
+          } else {
+            await backend.createEluent(this.model)
+          }
+        }
+        else if (this.modelname === "column")
+        {
+          if (this.model["id"]) {
+            await backend.updateColumn(this.model["id"], this.model)
+          } else {
+            await backend.createColumn(this.model)
           }
         }
       } catch (err) {

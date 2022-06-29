@@ -25,7 +25,7 @@
         >
         <div slot="table-actions">
           	<div slot="table-actions">
-            <b-button @click="newItem()">Create New</b-button>
+            <b-button class="btn btn-primary" @click="newItem()">&#x1f7a2; Create New</b-button>
           </div>
         </div>
         

@@ -4,6 +4,7 @@ import { Component, Vue } from 'vue-property-decorator'
 
 import { backend, BackendCompound, BackendMethod } from '../backend'
 import { CompoundDescription, MethodDescription, InstrumentDescription, EluentDescription, ColumnDescription } from '../descriptions'
+import axios from 'axios'
 
 export default {
   model : {},
@@ -20,7 +21,10 @@ export default {
       eluents: [],
       columns: [],
       self: {},
-      showEditor: false
+      showEditor: false,
+      search_words : "",
+      search_namespace: "name",
+      search_compounds: []
     }
   },
 
@@ -193,6 +197,55 @@ export default {
       this.hideModal()
     },
 
+    getPubChemProperty(compound, property_label, property_name, value_type) {
+      let properties = compound['props']
+      for (let property_index in properties)
+      {
+        let property = properties[property_index]
+        console.log(property)
+        if ((property['urn']['label'] == property_label) && (property['urn']['name'] == property_name))
+        {
+          return property['value'][value_type]
+        }
+      }
+    },
+
+    searchPubChem() {
+      console.log("search in PubChem Database: " + this.search_words)
+      let $axios = axios.create({
+        baseURL: 'https://pubchem.ncbi.nlm.nih.gov/rest/pug/compound/',
+        timeout: 5000,
+        headers: { 'Content-Type': 'application/json' },
+      })
+
+      // Response Interceptor to handle and log errors
+      $axios.interceptors.response.use(
+        function(response) {
+          return response
+        },
+        function(error) {
+          // Handle Error
+          return Promise.reject(error)
+        },
+      )
+
+      $axios.get( this.search_namespace + '/' + this.search_words + '/JSON').then((response) => 
+      {
+        console.log(response.data)
+        let pubchem_compounds = response.data['PC_Compounds']
+        console.log(pubchem_compounds)
+        for (let pubchem_compound_index in pubchem_compounds)
+        {
+          console.log(pubchem_compound_index)
+          let compound = {} 
+          let pubchem_compound = pubchem_compounds[pubchem_compound_index]
+          console.log(pubchem_compound)
+          compound['iupac'] = this.getPubChemProperty(pubchem_compound, 'IUPAC Name', 'Preferred', 'sval')
+          console.log(compound)
+        }
+      })
+    },
+
     async saveItem() {
       console.log("saveItem")
       try {
@@ -255,6 +308,32 @@ export default {
 <template>
   <div>
     <form @submit.prevent="saveItem">
+      
+      <div>
+        <b-form-group label="Import from PubChem">
+          <div class="form-row">
+            <div class="col">
+              <b-form-input
+                v-model="search_words"
+                type="text"
+              >
+              </b-form-input> 
+            </div>
+            <div class="col">
+              <v-select 
+                v-model="search_namespace"
+                :options="['cid', 'name', 'smiles', 'sdf', 'inchi', 'inchikey', 'formula']"
+                label="namespace"
+              ></v-select>
+            </div>
+            <div class="col">
+              <button type="button" class="btn btn-outline-primary btn-sm" @click="searchPubChem()">&#x1f50e;</button>
+            </div>
+          </div>
+        </b-form-group>
+      </div>
+      <hr/>
+
       <div v-for="description in descriptions" :key="description.field">
         <b-form-group v-if="(description.field in model) && description.editable" :label="description.label">
           <v-select v-if="'options' in description"

@@ -51,8 +51,8 @@
         id="modal-edit"
         ref="modal"
         v-model="showEditor"
+        :title="edit_modelname"
         hide-footer
-        hide-header
         size="xl"
     >
       <item :modelname="edit_modelname" :id="edit_id" :modalref="getModalRef" v-on:onModelChanged="onModelChanged"/>

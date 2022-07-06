@@ -23,6 +23,7 @@ export default {
       self: {},
       showSearch: false,
       search_words : "",
+      search_selected_row : -1,
       search_namespace: "name",
       search_compounds: [],
       search_compounds_columns: [
@@ -203,7 +204,6 @@ export default {
       for (let property_index in properties)
       {
         let property = properties[property_index]
-        console.log(property)
         if ((property['urn']['label'] == property_label) && (property['urn']['name'] == property_name))
         {
           return property['value'][value_type]
@@ -233,17 +233,13 @@ export default {
       {
         console.log(response.data)
         let pubchem_compounds = response.data['PC_Compounds']
-        console.log(pubchem_compounds)
         for (let pubchem_compound_index in pubchem_compounds)
         {
-          console.log(pubchem_compound_index)
           let compound = {} 
           let pubchem_compound = pubchem_compounds[pubchem_compound_index]
-          console.log(pubchem_compound)
           compound['iupac'] = this.getPubChemProperty(pubchem_compound, 'IUPAC Name', 'Preferred', 'sval')
           compound['name'] = this.search_words
           compound['method'] = ""
-          console.log(compound)
           this.search_compounds.push(compound)
         }
       })
@@ -300,11 +296,30 @@ export default {
     },
 
     rowStyleClassFn(row) {
-      return 'VGT-row';
+      if (row == this.search_selected_row) {
+        return "bg-primary"
+      }
+      else {
+        return 'VGT-row';
+      }
+    },
+
+    onRowClick(params) {
+        // params.row - row object 
+        // params.pageIndex - index of this row on the current page.
+        // params.selected - if selection is enabled this argument 
+        // indicates selected or not
+        // params.event - click event
+        if (this.search_selected_row == params.row) {
+          this.search_selected_row = -1
+        }
+        else {
+          this.search_selected_row = params.row
+        }
     },
 
     searchOK() {
-      this.model = this.search_compounds[0] // TODO!!!!
+      this.model = this.search_compounds[this.search_selected_row.originalIndex]
     }
 
   },
@@ -354,13 +369,14 @@ export default {
           <vue-good-table
             :columns="search_compounds_columns"
             :rows="search_compounds"
-            :row-style-class="rowStyleClassFn">
+            :row-style-class="rowStyleClassFn"
+            @on-row-click="onRowClick">
           </vue-good-table>
         </div>
       </div>
     </b-modal>
 
-    <button type="submit" class="btn btn-secondary" @click="showSearch=true">Import from PubChem</button>
+    <button v-if="modelname === 'compound'" type="submit" class="btn btn-secondary" @click="showSearch=true">Import from PubChem</button>
 
     <form @submit.prevent="saveItem">
       <div v-for="description in descriptions" :key="description.field">
@@ -385,8 +401,8 @@ export default {
   </div>
 </template>
 
-<style scoped>
+<style>
 .VGT-row:hover {
-    background-color: yellow;
+    background-color: lightgray;
   }
 </style>

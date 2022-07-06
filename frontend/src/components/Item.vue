@@ -21,19 +21,20 @@ export default {
       eluents: [],
       columns: [],
       self: {},
-      showEditor: false,
+      showSearch: false,
       search_words : "",
       search_namespace: "name",
-      search_compounds: []
-    }
-  },
-
-  watch: { 
-    show: {
-      deep: true,
-      handler(newValue, oldValue) {
-        this.showEditor = true
-      }     
+      search_compounds: [],
+      search_compounds_columns: [
+        {
+          label: 'Name',
+          field: 'name',
+        },
+        {
+          label: 'IUPAC',
+          field: 'iupac',
+        },
+      ],
     }
   },
 
@@ -217,7 +218,6 @@ export default {
         timeout: 5000,
         headers: { 'Content-Type': 'application/json' },
       })
-
       // Response Interceptor to handle and log errors
       $axios.interceptors.response.use(
         function(response) {
@@ -228,7 +228,7 @@ export default {
           return Promise.reject(error)
         },
       )
-
+      this.search_compounds = []
       $axios.get( this.search_namespace + '/' + this.search_words + '/JSON').then((response) => 
       {
         console.log(response.data)
@@ -241,7 +241,10 @@ export default {
           let pubchem_compound = pubchem_compounds[pubchem_compound_index]
           console.log(pubchem_compound)
           compound['iupac'] = this.getPubChemProperty(pubchem_compound, 'IUPAC Name', 'Preferred', 'sval')
+          compound['name'] = this.search_words
+          compound['method'] = ""
           console.log(compound)
+          this.search_compounds.push(compound)
         }
       })
     },
@@ -294,6 +297,14 @@ export default {
       }
       this.$emit('onModelChanged');
       this.hideModal()
+    },
+
+    rowStyleClassFn(row) {
+      return 'VGT-row';
+    },
+
+    searchOK() {
+      this.model = this.search_compounds[0] // TODO!!!!
     }
 
   },
@@ -307,10 +318,17 @@ export default {
 
 <template>
   <div>
-    <form @submit.prevent="saveItem">
-      
+    <b-modal
+        id="modal-search"
+        ref="modal-search"
+        v-model="showSearch"
+        title="Import from PubChem"
+        size="xl"
+        @ok="searchOK"
+    >
       <div>
-        <b-form-group label="Import from PubChem">
+        <!-- Search section -->
+        <b-form-group>
           <div class="form-row">
             <div class="col">
               <b-form-input
@@ -319,6 +337,7 @@ export default {
               >
               </b-form-input> 
             </div>
+            <!-- Edit / New Form section -->
             <div class="col">
               <v-select 
                 v-model="search_namespace"
@@ -331,9 +350,19 @@ export default {
             </div>
           </div>
         </b-form-group>
+        <div>
+          <vue-good-table
+            :columns="search_compounds_columns"
+            :rows="search_compounds"
+            :row-style-class="rowStyleClassFn">
+          </vue-good-table>
+        </div>
       </div>
-      <hr/>
+    </b-modal>
 
+    <button type="submit" class="btn btn-secondary" @click="showSearch=true">Import from PubChem</button>
+
+    <form @submit.prevent="saveItem">
       <div v-for="description in descriptions" :key="description.field">
         <b-form-group v-if="(description.field in model) && description.editable" :label="description.label">
           <v-select v-if="'options' in description"
@@ -356,4 +385,8 @@ export default {
   </div>
 </template>
 
-
+<style scoped>
+.VGT-row:hover {
+    background-color: yellow;
+  }
+</style>

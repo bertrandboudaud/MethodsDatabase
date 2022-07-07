@@ -57,6 +57,30 @@ export class CompoundDescription {
       editable: true
     },
     {
+      field: "inchi",
+      label: "InChI",
+      align: "center",
+      type: 'string',
+      hidden: false,
+      editable: true
+    },
+    {
+      field: "inchikey",
+      label: "InChI Key",
+      align: "center",
+      type: 'string',
+      hidden: false,
+      editable: true
+    },
+    {
+      field: "smiles",
+      label: "SMILES",
+      align: "center",
+      type: 'string',
+      hidden: false,
+      editable: true
+    },
+    {
       field: "method_id",
       label: "method",
       align: "center",

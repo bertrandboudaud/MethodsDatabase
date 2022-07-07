@@ -35,6 +35,18 @@ export default {
           label: 'IUPAC',
           field: 'iupac',
         },
+        {
+          label: 'InChI',
+          field: 'inchi',
+        },
+        {
+          label: 'InChIKey',
+          field: 'inchikey',
+        },
+        {
+          label: 'SMILES',
+          field: 'smiles',
+        },
       ],
     }
   },
@@ -84,6 +96,9 @@ export default {
               column_id: '',
               name: '',
               iupac: '',
+              inchi: '',
+              inchikey: '',
+              smiles: '',
               method_id: ''
             }
           }
@@ -238,6 +253,9 @@ export default {
           let compound = {} 
           let pubchem_compound = pubchem_compounds[pubchem_compound_index]
           compound['iupac'] = this.getPubChemProperty(pubchem_compound, 'IUPAC Name', 'Preferred', 'sval')
+          compound['inchi'] = this.getPubChemProperty(pubchem_compound, 'InChI', 'Standard', 'sval')
+          compound['inchikey'] = this.getPubChemProperty(pubchem_compound, 'InChIKey', 'Standard', 'sval')
+          compound['smiles'] = this.getPubChemProperty(pubchem_compound, 'SMILES', 'Canonical', 'sval')
           compound['name'] = this.search_words
           compound['method'] = ""
           this.search_compounds.push(compound)

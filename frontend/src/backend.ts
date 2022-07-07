@@ -44,6 +44,9 @@ export interface BackendCompound {
   id: String
   name: String
   iupac: String
+  inchi: String
+  inchikey: String
+  smiles: String
   method_id: String
 }
 
@@ -160,6 +163,9 @@ export let backend = {
     let compound = {
       name: data.name,
       iupac: data.iupac,
+      inchi: data.inchi,
+      inchikey: data.inchikey,
+      smiles: data.smiles,
       method_id : data.method_id,
     }
     return $axios.post(`compounds/`, compound).then((response) => response.data)
@@ -170,6 +176,9 @@ export let backend = {
       id: id,
       name: data.name,
       iupac: data.iupac,
+      inchi: data.inchi,
+      inchikey: data.inchikey,
+      smiles: data.smiles,
       method_id : data.method_id,
     }
     return $axios.post(`compounds/${id}`, compound).then((response) => response.data)

@@ -8,9 +8,12 @@ class Compound(db.Model):
     id = db.Column(UUID(as_uuid=True), primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
     iupac = db.Column(db.String(80), unique=True, nullable=False)
+    inchi = db.Column(db.String(80), unique=True, nullable=False)
+    inchikey = db.Column(db.String(80), unique=True, nullable=False)
+    smiles = db.Column(db.String(80), unique=True, nullable=False)
     method_id = db.Column(UUID())
 
-    def __init__(self, id=None, name=None, iupac=None, method_id=None):
+    def __init__(self, id=None, name=None, iupac=None, inchi=None, inchikey=None, smiles=None, method_id=None):
         if not id:
             id = uuid4()
         self.id = id
@@ -18,6 +21,9 @@ class Compound(db.Model):
         self.last_modified_at = self.created_at
         self.name = name
         self.iupac = iupac
+        self.inchi = inchi
+        self.inchikey = inchikey
+        self.smiles = smiles
         self.method_id = method_id
 
     def __repr__(self):

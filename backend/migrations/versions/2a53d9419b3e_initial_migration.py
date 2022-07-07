@@ -90,10 +90,16 @@ def upgrade():
     sa.Column('id', postgresql.UUID(as_uuid=True), nullable=False),
     sa.Column('name', sa.String(length=80), nullable=False),
     sa.Column('iupac', sa.String(length=80), nullable=False),
+    sa.Column('inchi', sa.String(length=80), nullable=False),
+    sa.Column('inchikey', sa.String(length=80), nullable=False),
+    sa.Column('smiles', sa.String(length=80), nullable=False),
     sa.Column('method_id', postgresql.UUID, sa.ForeignKey("method.id")),
     sa.PrimaryKeyConstraint('id'),
     sa.UniqueConstraint('name'),
     sa.UniqueConstraint('iupac'),
+    sa.UniqueConstraint('inchi'),
+    sa.UniqueConstraint('inchikey'),
+    sa.UniqueConstraint('smiles'),
     )
     # ### end Alembic commands ###
 

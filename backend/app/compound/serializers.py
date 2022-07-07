@@ -33,6 +33,9 @@ class CompoundSchema(WrapDataSchema):
     id = fields.Str()
     name = fields.Str(required=True)
     iupac = fields.Str(required=True)
+    inchi = fields.Str(required=True)
+    inchikey = fields.Str(required=True)
+    smiles = fields.Str(required=True)
     comment = fields.Str()
     method_id = fields.Str()
 
@@ -45,6 +48,9 @@ class CompoundSchema(WrapDataSchema):
         name = data.get("name")
         validate_unique_field("name", name, id)
         iupac = data.get("iupac")
+        inchi = data.get("inchi")
+        inchikey = data.get("inchikey")
+        smiles = data.get("smiles")
         validate_unique_field("iupac", iupac, id)
 
 class CompoundFilterSchema(WrapDataSchema):

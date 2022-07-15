@@ -1,4 +1,4 @@
-# Method Database for laboratory.
+# Method Database for Laboratory.
 
 Lists identified compound in the laboratory and the assocaited methods used.
 The Method is an association of insruments, eluant, and other parameters used.

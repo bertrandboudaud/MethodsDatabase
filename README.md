@@ -1,6 +1,9 @@
-[![CircleCI](https://circleci.com/gh/serebrov/flask-vue-starter.svg?style=svg)](https://circleci.com/gh/serebrov/flask-vue-starter)
+# Method Database for laboratory.
 
-Starter example app: Flask (SQLAlchemy, PostgreSQL) + Vue.js (Typescript), docker setup for backend and frontend.
+Lists identified compound in the laboratory and the assocaited methods used.
+The Method is an association of insruments, eluant, and other parameters used.
+
+# Technical details
 
 Backend is powered by Flask, flask-rest-api, marshmallow and SQLAlchemy to create a solid framework for REST API backend development:
 

@@ -1,17 +1,50 @@
 from app.config import config
 from app.extensions import api, init_app_extensions, webargs
 from flask import Flask, jsonify
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from marshmallow import ValidationError
 from typing import Any
 
 from .cli import register_cli_handlers
+import flask_login
+from flask_login import UserMixin
 
 # from app.auth.authentication import basic_auth
 
+class User(UserMixin):
+    id = 42
 
 def register_api(app: Flask) -> None:
     """Register blueprints and routes."""
+
+    @app.route("/api")
+    @cross_origin()
+    def hello() -> Any:
+        return jsonify({"message": "Hello"})
+
+    @app.route('/api/login', methods=['GET', 'POST'])
+    @cross_origin()
+    def login():
+        # Here we use a class of some kind to represent and validate our
+        # client-side form data. For example, WTForms is a library that will
+        # handle this for us, and we use a custom LoginForm to validate.
+        #form = LoginForm()
+        #if form.validate_on_submit():
+        if True:
+            # Login and validate the user.
+            # user should be an instance of your `User` class
+            example_user = User() # TODO implement user db. here we have one unique user
+            flask_login.login_user(example_user)
+
+            # TODO next = flask.request.args.get('next')
+            # is_safe_url should check if the url is safe for redirects.
+            # See http://flask.pocoo.org/snippets/62/ for an example.
+            # if not is_safe_url(next):
+            #    return flask.abort(400)
+
+            return Flask.redirect(next or Flask.url_for('index'))
+        return Flask.render_template('login.html', form=form)
+
     from app.forum.api import blueprint as forum_blueprint
     from app.user.api import blueprint as user_blueprint
     from app.instrument.api import blueprint as instrument_blueprint
@@ -27,10 +60,6 @@ def register_api(app: Flask) -> None:
     api.register_blueprint(column_blueprint)
     api.register_blueprint(method_blueprint)
     api.register_blueprint(forum_blueprint)
-
-    @app.route("/api")
-    def hello() -> Any:
-        return jsonify({"message": "Hello"})
 
 
 def register_api_error_handlers(app: Flask) -> None:
@@ -53,14 +82,11 @@ def register_api_error_handlers(app: Flask) -> None:
     def validateion_error(error):  # type: ignore
         return jsonify({"errors": error.normalized_messages()}), 400
 
-    # @basic_auth.error_handler
-    # def error_handler(*args, **kwargs):  # type: ignore
-    #     return jsonify({"error": "Unauthorized"}), 401
-
 
 def create_app(config_name):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
+    app.secret_key = 'super secret key'
     init_app_extensions(app)
 
     # Note: unsafe, better set origins to known hosts

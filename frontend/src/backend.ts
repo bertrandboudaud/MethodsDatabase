@@ -82,6 +82,14 @@ export interface BackendMethod {
 export let backend = {
 
   // ---------------------
+  // Login
+  // ---------------------
+  login(username, password) {
+    console.log("login from bqckend")
+    return $axios.get(`login`).then((response) => response.data)
+  },
+
+  // ---------------------
   // Users
   // ---------------------
 

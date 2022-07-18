@@ -4,11 +4,12 @@ Flask-Cors==3.0.10
 psycopg2-binary==2.9.3
 SQLAlchemy[mypy]==1.4.35
 Flask-SQLAlchemy==2.5.1
-alembic==1.7.7
+alembic==1.8.1
 Flask-Migrate==3.1.0
 
 flask-smorest==0.37.0
 marshmallow==3.15.0
+flask-login==0.6.1
 
 pytest==7.1.1
 pytest-cov==3.0.0

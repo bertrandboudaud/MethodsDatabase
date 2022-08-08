@@ -85,8 +85,8 @@ export let backend = {
   // Login
   // ---------------------
   login(username, password) {
-    console.log("login from bqckend")
-    return $axios.get(`login`).then((response) => response.data)
+    console.log("login from backend")
+    return $axios.get(`login/${username}/${password}`).then((response) => response.data)
   },
 
   // ---------------------

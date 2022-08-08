@@ -22,15 +22,16 @@ def register_api(app: Flask) -> None:
     def hello() -> Any:
         return jsonify({"message": "Hello"})
 
-    @app.route('/api/login', methods=['GET', 'POST'])
+    @app.route('/api/login/<user>/<password>', methods=['GET', 'POST'])
     @cross_origin()
-    def login():
+    def login(user, password):
         # Here we use a class of some kind to represent and validate our
         # client-side form data. For example, WTForms is a library that will
         # handle this for us, and we use a custom LoginForm to validate.
         #form = LoginForm()
         #if form.validate_on_submit():
-        if True:
+        #if True:
+        if user == "bertrand" and password =="toto":
             # Login and validate the user.
             # user should be an instance of your `User` class
             example_user = User() # TODO implement user db. here we have one unique user
@@ -42,8 +43,8 @@ def register_api(app: Flask) -> None:
             # if not is_safe_url(next):
             #    return flask.abort(400)
 
-            return Flask.redirect(next or Flask.url_for('index'))
-        return Flask.render_template('login.html', form=form)
+            return jsonify({'success':True}), 200, {'ContentType':'application/json'} 
+        return jsonify({"errors": "Invalid user/password"}), 400, {'ContentType':'application/json'} 
 
     from app.forum.api import blueprint as forum_blueprint
     from app.user.api import blueprint as user_blueprint

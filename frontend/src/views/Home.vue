@@ -10,12 +10,14 @@ export default {
 
   data() {
     return {
+      username : "",
+      password : ""
     }
   },
 
   methods: {
-    async login() {
-      await backend.login("user", "password")
+    async login(username, password) {
+      await backend.login(username, password)
     }
   }
 }
@@ -26,7 +28,26 @@ export default {
   <div>
     <div class="container-fluid mt-4">
       <h1 class="h1">DTU Methods Database</h1>
-      <button type="button" class="btn btn-outline-primary btn-sm" @click="login()">Login</button>
+
+        <b-card :title="Login">
+          <form @submit.prevent="login(username, password)">
+            <b-form-group label="Username">
+              <b-form-input
+                v-model="username"
+                type="text"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group label="password">
+              <b-form-textarea
+                v-model="password"
+                type="text"
+              ></b-form-textarea>
+            </b-form-group>
+            <div>
+              <b-btn type="submit" variant="success">Login</b-btn>
+            </div>
+          </form>
+        </b-card>
     </div>
   </div>
 </template>

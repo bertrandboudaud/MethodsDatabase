@@ -4,7 +4,7 @@ Flask-Cors==3.0.10
 psycopg2-binary==2.9.3
 SQLAlchemy[mypy]==1.4.35
 Flask-SQLAlchemy==2.5.1
-alembic==1.7.7
+alembic==1.9.0
 Flask-Migrate==3.1.0
 
 flask-smorest==0.37.0
